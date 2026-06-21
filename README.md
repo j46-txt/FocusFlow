@@ -26,15 +26,18 @@ You can run and test this application locally on your own computer by following 
 ### Prerequisites
 Before starting, make sure you have **Python** installed on your system. If you do not have it, you can download and install it from the official website (python.org).
 
-### Step 1: Open the Terminal or Command Prompt
-* **Windows:** Press the `Windows Key`, type `cmd`, and press Enter.
-* **Mac/Linux:** Open the `Terminal` application.
+### Step 1: Download and Prepare the Project Files
+* Download this repository as a ZIP file and extract all its contents into a folder on your computer, or clone it using Git:
+```bash
+  git clone [https://github.com/your-username/FocusFlow.git](https://github.com/your-username/FocusFlow.git)
+```
+* Open your terminal (Mac/Linux) or Command Prompt (Windows).
 * Navigate to the folder where you downloaded this project's files (for example: `cd FocusFlow`).
 
 ### Step 2: Install the Required Packages
 Copy and paste the following command into your terminal window and press Enter to automatically download the visual interface components:
 ```bash
-pip install "nicegui>=1.4.0" "psycopg2-binary>=2.9.0"
+pip install -r requirements.txt
 ```
 
 ### Step 3: Lauch the Application
