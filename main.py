@@ -42,4 +42,4 @@ def main_page():
 
 if __name__ in {"__main__", "__mp_main__"}:
     port = int(os.environ.get("PORT", 8080))
-    ui.run(title="FocusFlow", host="0.0.0.0", port=port, dark=True, show=False, favicon="⏳")
+    ui.run(title="FocusFlow", host="0.0.0.0", port=port, dark=True, show=False, favicon="🌊​")
