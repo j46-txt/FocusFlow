@@ -327,180 +327,183 @@ def build_ui():
         is_stopwatch = focus_timer.state.mode == 'stopwatch'
         is_break = focus_timer.state.mode == 'break'
 
-        # Proportional padding and symmetric line-height centering fix for Courier Prime
+        # Proportional padding and symmetric line-height centering fix for Courier Prime[cite: 1]
         if focus_timer.state.mode == 'pomodoro':
-            timer_status_label.text = 'Focus'
-            timer_status_label.style('color: #38bdf8; background-color: rgba(56, 189, 248, 0.06); border: 0.5px solid #38bdf8; padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1 anisotropy;')
-            timer_status_label.set_visibility(True)
+            timer_status_label.text = 'Focus'[cite: 1]
+            timer_status_label.style('color: #38bdf8; background-color: rgba(56, 189, 248, 0.06); border: 0.5px solid #38bdf8; padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1 anisotropy;')[cite: 1]
+            timer_status_label.set_visibility(True)[cite: 1]
+            mode_label = 'Focus'
         elif focus_timer.state.mode == 'break':
-            timer_status_label.text = 'Break'
-            timer_status_label.style('color: #4ade80; background-color: rgba(74, 222, 128, 0.06); border: 0.5px solid rgba(74, 222, 128, 0.2); padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1;')
-            timer_status_label.set_visibility(True)
+            timer_status_label.text = 'Break'[cite: 1]
+            timer_status_label.style('color: #4ade80; background-color: rgba(74, 222, 128, 0.06); border: 0.5px solid rgba(74, 222, 128, 0.2); padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1;')[cite: 1]
+            timer_status_label.set_visibility(True)[cite: 1]
+            mode_label = 'Break'
         else:
-            timer_status_label.set_visibility(False)
+            timer_status_label.set_visibility(False)[cite: 1]
+            mode_label = 'Stopwatch'
 
-        timer_label.text = focus_timer.display_time
+        timer_label.text = focus_timer.display_time[cite: 1]
 
-        # --- Dynamic Browser Tab Title Sync ---
-        mode_label = focus_timer.state.mode.upper() if focus_timer.state.mode == 'break' else focus_timer.state.mode.capitalize()
-        ui.run_javascript(f'document.title = "({focus_timer.display_time}) {mode_label} | FocusFlow"')
+        # --- Minimalist Browser Tab Title Engine ---
+        # Excludes "FocusFlow" entirely, outputting clean blocks like "(25:00) Focus" or "(00:14) Stopwatch"
+        ui.run_javascript(f'document.title = "({focus_timer.display_time}) {mode_label}"')
 
-        skip_btn.set_visibility(is_break)
-        reset_btn.set_visibility(is_pomo_mode and status != 'idle')
-        stop_btn.set_visibility(is_stopwatch and status != 'idle')
+        skip_btn.set_visibility(is_break)[cite: 1]
+        reset_btn.set_visibility(is_pomo_mode and status != 'idle')[cite: 1]
+        stop_btn.set_visibility(is_stopwatch and status != 'idle')[cite: 1]
 
         if status == 'idle':
-            mode_toggle.enable()
+            mode_toggle.enable()[cite: 1]
         else:
-            mode_toggle.disable()
+            mode_toggle.disable()[cite: 1]
 
-        active_focus_seconds = 0
-        if status in ('running', 'paused'):
-            if focus_timer.state.mode == 'pomodoro':
-                active_focus_seconds = focus_timer.pomodoro_duration - focus_timer.state.seconds_remaining
-            elif focus_timer.state.mode == 'stopwatch':
-                active_focus_seconds = focus_timer.state.seconds_elapsed
+        active_focus_seconds = 0[cite: 1]
+        if status in ('running', 'paused'):[cite: 1]
+            if focus_timer.state.mode == 'pomodoro':[cite: 1]
+                active_focus_seconds = focus_timer.pomodoro_duration - focus_timer.state.seconds_remaining[cite: 1]
+            elif focus_timer.state.mode == 'stopwatch':[cite: 1]
+                active_focus_seconds = focus_timer.state.seconds_elapsed[cite: 1]
 
-        goal_hours = settings.get_weekly_goal_hours()
-        goal_seconds = goal_hours * 3600
+        goal_hours = settings.get_weekly_goal_hours()[cite: 1]
+        goal_seconds = goal_hours * 3600[cite: 1]
 
-        live_today = cached_stats['today'] + active_focus_seconds
-        live_week = cached_stats['week'] + active_focus_seconds
-        live_total = cached_stats['total'] + active_focus_seconds
+        live_today = cached_stats['today'] + active_focus_seconds[cite: 1]
+        live_week = cached_stats['week'] + active_focus_seconds[cite: 1]
+        live_total = cached_stats['total'] + active_focus_seconds[cite: 1]
 
-        week_label.text = f"{statistics.format_duration(live_week)} / {goal_hours}h"
-        total_label.text = statistics.format_duration(live_total)
+        week_label.text = f"{statistics.format_duration(live_week)} / {goal_hours}h"[cite: 1]
+        total_label.text = statistics.format_duration(live_total)[cite: 1]
         
-        avg_label.text = f"{cached_stats['avg_week_hours']:.1f} hours/week"
-        focus_days_label.text = f"{cached_stats['focus_days']} days"
+        avg_label.text = f"{cached_stats['avg_week_hours']:.1f} hours/week"[cite: 1]
+        focus_days_label.text = f"{cached_stats['focus_days']} days"[cite: 1]
         
-        today_label.text = statistics.format_duration(live_today)
+        today_label.text = statistics.format_duration(live_today)[cite: 1]
         
-        progress_val = min(1.0, live_week / goal_seconds) if goal_seconds > 0 else 0
-        week_progress.value = progress_val
+        progress_val = min(1.0, live_week / goal_seconds) if goal_seconds > 0 else 0[cite: 1]
+        week_progress.value = progress_val[cite: 1]
         
-        active_sub = subjects.get_active_subject()
-        if active_sub:
-            suggestion_val_label.set_visibility(True)
-            edit_suggestion_inline_btn.set_visibility(True)
-            add_suggestion_inline_btn.set_visibility(False)
-            suggestion_val_label.text = f"{active_sub.name}"
+        active_sub = subjects.get_active_subject()[cite: 1]
+        if active_sub:[cite: 1]
+            suggestion_val_label.set_visibility(True)[cite: 1]
+            edit_suggestion_inline_btn.set_visibility(True)[cite: 1]
+            add_suggestion_inline_btn.set_visibility(False)[cite: 1]
+            suggestion_val_label.text = f"{active_sub.name}"[cite: 1]
         else:
-            suggestion_val_label.set_visibility(False)
-            edit_suggestion_inline_btn.set_visibility(False)
-            add_suggestion_inline_btn.set_visibility(True)
+            suggestion_val_label.set_visibility(False)[cite: 1]
+            edit_suggestion_inline_btn.set_visibility(False)[cite: 1]
+            add_suggestion_inline_btn.set_visibility(True)[cite: 1]
 
-        timer_label.update()
-        week_label.update()
-        total_label.update()
-        today_label.update()
-        focus_days_label.update()
-        suggestion_val_label.update()
+        timer_label.update()[cite: 1]
+        week_label.update()[cite: 1]
+        total_label.update()[cite: 1]
+        today_label.update()[cite: 1]
+        focus_days_label.update()[cite: 1]
+        suggestion_val_label.update()[cite: 1]
 
     def on_session_complete(duration_seconds: int, mode: str):
-        active_sub = subjects.get_active_subject()
-        if active_sub:
-            statistics.record_session(active_sub.id, duration_seconds, mode)
-        refresh_cached_stats()
-        update_display()
+        active_sub = subjects.get_active_subject()[cite: 1]
+        if active_sub:[cite: 1]
+            statistics.record_session(active_sub.id, duration_seconds, mode)[cite: 1]
+        refresh_cached_stats()[cite: 1]
+        update_display()[cite: 1]
         
     def on_timer_end(mode: str):
-        if mode == 'pomodoro':
-            ui.run_javascript("const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gain.gain.setValueAtTime(0.1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5); osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.5);")
-        elif mode == 'break':
-            ui.run_javascript("const ctx = new (window.AudioContext || window.webkitAudioContext)(); [0, 0.2].forEach(t => { const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(440, ctx.currentTime + t); gain.gain.setValueAtTime(0.05, ctx.currentTime + t); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.15); osc.connect(gain); gain.connect(ctx.destination); osc.start(ctx.currentTime + t); osc.stop(ctx.currentTime + t + 0.15); });")
+        if mode == 'pomodoro':[cite: 1]
+            ui.run_javascript("const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gain.gain.setValueAtTime(0.1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5); osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.5);")[cite: 1]
+        elif mode == 'break':[cite: 1]
+            ui.run_javascript("const ctx = new (window.AudioContext || window.webkitAudioContext)(); [0, 0.2].forEach(t => { const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(440, ctx.currentTime + t); gain.gain.setValueAtTime(0.05, ctx.currentTime + t); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.15); osc.connect(gain); gain.connect(ctx.destination); osc.start(ctx.currentTime + t); osc.stop(ctx.currentTime + t + 0.15); });")[cite: 1]
 
-    subjects.ensure_daily_rotation()
-    focus_timer = FocusTimer(on_tick=update_display, on_complete=on_session_complete, on_timer_end=on_timer_end)
-    refresh_cached_stats()
+    subjects.ensure_daily_rotation()[cite: 1]
+    focus_timer = FocusTimer(on_tick=update_display, on_complete=on_session_complete, on_timer_end=on_timer_end)[cite: 1]
+    refresh_cached_stats()[cite: 1]
     
     def update_clock():
-        now = datetime.datetime.now()
-        clock_label.text = now.strftime('%d/%m/%Y | %A | %H:%M')
-        greeting_label.text = get_greeting()
-        update_display()
+        now = datetime.datetime.now()[cite: 1]
+        clock_label.text = now.strftime('%d/%m/%Y | %A | %H:%M')[cite: 1]
+        greeting_label.text = get_greeting()[cite: 1]
+        update_display()[cite: 1]
 
-    ui.timer(1.0, update_clock)
-    ui.timer(1.0, focus_timer.tick)
+    ui.timer(1.0, update_clock)[cite: 1]
+    ui.timer(1.0, focus_timer.tick)[cite: 1]
 
     # --- Main view layout structure ---
-    with ui.column().classes('w-full max-w-4xl mx-auto p-4 gap-4').style('background-color: #000000;'):
+    with ui.column().classes('w-full max-w-4xl mx-auto p-4 gap-4').style('background-color: #000000;'):[cite: 1]
         
-        clock_label = ui.label('').classes('text-neutral-500 tracking-wider text-xs pl-1')
+        clock_label = ui.label('').classes('text-neutral-500 tracking-wider text-xs pl-1')[cite: 1]
         
         # --- Part 1: Top panel ---
-        with ui.column().classes('w-full gap-4 p-4 mono-card'):
+        with ui.column().classes('w-full gap-4 p-4 mono-card'):[cite: 1]
             
-            with ui.row().classes('w-full justify-between items-start text-sm'):
-                with ui.column().classes('gap-1'):
-                    greeting_label = ui.label('').classes('text-neutral-300')
+            with ui.row().classes('w-full justify-between items-start text-sm'):[cite: 1]
+                with ui.column().classes('gap-1'):[cite: 1]
+                    greeting_label = ui.label('').classes('text-neutral-300')[cite: 1]
                     
-                    with ui.row().classes('items-center gap-1.5').style('height: 24px; max-height: 24px; overflow: hidden;'):
-                        ui.label("Today's suggestion:").classes('text-neutral-500 text-sm')
-                        suggestion_val_label = ui.label('').classes('text-white uppercase text-sm')
-                        edit_suggestion_inline_btn = ui.button(icon='edit', on_click=open_suggestions_panel).props('flat dense size=xs color=grey').style('margin-top: -2px; padding: 0; width: 12px; min-width: 12px;')
-                        add_suggestion_inline_btn = ui.button('+ Define Suggestions', on_click=open_suggestions_panel).classes('inline-mono-btn')
+                    with ui.row().classes('items-center gap-1.5').style('height: 24px; max-height: 24px; overflow: hidden;'):[cite: 1]
+                        ui.label("Today's suggestion:").classes('text-neutral-500 text-sm')[cite: 1]
+                        suggestion_val_label = ui.label('').classes('text-white uppercase text-sm')[cite: 1]
+                        edit_suggestion_inline_btn = ui.button(icon='edit', on_click=open_suggestions_panel).props('flat dense size=xs color=grey').style('margin-top: -2px; padding: 0; width: 12px; min-width: 12px;')[cite: 1]
+                        add_suggestion_inline_btn = ui.button('+ Define Suggestions', on_click=open_suggestions_panel).classes('inline-mono-btn')[cite: 1]
                 
-                with ui.row().classes('gap-2 items-center'):
-                    ui.button(icon='help', on_click=open_help_panel).props('flat dense size=sm color=grey')
-                    ui.button(icon='settings', on_click=open_settings_panel).props('flat dense size=sm color=grey')
+                with ui.row().classes('gap-2 items-center'):[cite: 1]
+                    ui.button(icon='help', on_click=open_help_panel).props('flat dense size=sm color=grey')[cite: 1]
+                    ui.button(icon='settings', on_click=open_settings_panel).props('flat dense size=sm color=grey')[cite: 1]
 
-            with ui.column().classes('w-full gap-1.5 mt-2'):
-                with ui.row().classes('w-full justify-between items-baseline'):
-                    ui.label('Weekly Goal').classes('text-xs uppercase tracking-wider text-neutral-500')
-                    week_label = ui.label('0h 0m / 10h').classes('text-white text-sm')
+            with ui.column().classes('w-full gap-1.5 mt-2'):[cite: 1]
+                with ui.row().classes('w-full justify-between items-baseline'):[cite: 1]
+                    ui.label('Weekly Goal').classes('text-xs uppercase tracking-wider text-neutral-500')[cite: 1]
+                    week_label = ui.label('0h 0m / 10h').classes('text-white text-sm')[cite: 1]
                 
-                week_progress = ui.linear_progress(value=0.0, show_value=False).classes('w-full').style('height: 14px !important; border-radius: 0px;')
+                week_progress = ui.linear_progress(value=0.0, show_value=False).classes('w-full').style('height: 14px !important; border-radius: 0px;')[cite: 1]
 
         # --- Part 2: Bottom container ---
-        with ui.row().classes('w-full gap-6 items-stretch'):
+        with ui.row().classes('w-full gap-6 items-stretch'):[cite: 1]
             
             # Statistics card block
-            with ui.column().classes('p-4 gap-4 relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
-                with ui.row().classes('w-full justify-between items-center pb-2 mono-divider'):
-                    ui.label('Statistics').classes('text-sm uppercase tracking-wider text-neutral-400')
+            with ui.column().classes('p-4 gap-4 relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):[cite: 1]
+                with ui.row().classes('w-full justify-between items-center pb-2 mono-divider'):[cite: 1]
+                    ui.label('Statistics').classes('text-sm uppercase tracking-wider text-neutral-400')[cite: 1]
                 
-                with ui.column().classes('w-full gap-3 text-sm text-neutral-400'):
-                    with ui.column().classes('gap-0'):
-                        ui.label('Pace').classes('text-sm uppercase tracking-wider text-neutral-500')
-                        avg_label = ui.label('0.0 hours/week').classes('text-white text-base')
+                with ui.column().classes('w-full gap-3 text-sm text-neutral-400'):[cite: 1]
+                    with ui.column().classes('gap-0'):[cite: 1]
+                        ui.label('Pace').classes('text-sm uppercase tracking-wider text-neutral-500')[cite: 1]
+                        avg_label = ui.label('0.0 hours/week').classes('text-white text-base')[cite: 1]
                         
-                    with ui.column().classes('gap-0'):
-                        ui.label('Total Hours').classes('text-sm uppercase tracking-wider text-neutral-500')
-                        total_label = ui.label('0h 0m').classes('text-white text-base')
+                    with ui.column().classes('gap-0'):[cite: 1]
+                        ui.label('Total Hours').classes('text-sm uppercase tracking-wider text-neutral-500')[cite: 1]
+                        total_label = ui.label('0h 0m').classes('text-white text-base')[cite: 1]
 
-                    with ui.column().classes('gap-0'):
-                        ui.label('Total Focus Days').classes('text-sm uppercase tracking-wider text-neutral-500')
-                        focus_days_label = ui.label('0 days').classes('text-white text-base')
+                    with ui.column().classes('gap-0'):[cite: 1]
+                        ui.label('Total Focus Days').classes('text-sm uppercase tracking-wider text-neutral-500')[cite: 1]
+                        focus_days_label = ui.label('0 days').classes('text-white text-base')[cite: 1]
                 
-                ui.label('Show More »').on('click', open_history_panel).classes('absolute bottom-4 left-4 cursor-pointer text-xs uppercase tracking-wider transition-colors blue-link')
+                ui.label('Show More »').on('click', open_history_panel).classes('absolute bottom-4 left-4 cursor-pointer text-xs uppercase tracking-wider transition-colors blue-link')[cite: 1]
 
             # Timer controls card block
-            with ui.column().classes('p-4 gap-4 items-center justify-start relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
-                with ui.row().classes('w-full items-center pb-2 relative').style('height: 32px; min-height: 32px; max-height: 32px; border-bottom: 1px solid #141414;'):
-                    ui.label('Timer').classes('text-sm uppercase tracking-wider text-neutral-400')
-                    with ui.row().classes('absolute right-0 top-0 bottom-2 items-center'):
-                        timer_status_label = ui.label('[Focus]').classes('rounded-none font-mono')
+            with ui.column().classes('p-4 gap-4 items-center justify-start relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):[cite: 1]
+                with ui.row().classes('w-full items-center pb-2 relative').style('height: 32px; min-height: 32px; max-height: 32px; border-bottom: 1px solid #141414;'):[cite: 1]
+                    ui.label('Timer').classes('text-sm uppercase tracking-wider text-neutral-400')[cite: 1]
+                    with ui.row().classes('absolute right-0 top-0 bottom-2 items-center'):[cite: 1]
+                        timer_status_label = ui.label('[Focus]').classes('rounded-none font-mono')[cite: 1]
                 
-                mode_toggle = ui.toggle(
-                    ['Pomodoro', 'Stopwatch'], 
-                    value='Pomodoro', 
-                    on_change=lambda e: focus_timer.set_mode(e.value)
-                ).classes('large-toggle mt-1').props('dense unevaluated flat')
+                mode_toggle = ui.toggle([cite: 1]
+                    ['Pomodoro', 'Stopwatch'],[cite: 1]
+                    value='Pomodoro',[cite: 1]
+                    on_change=lambda e: focus_timer.set_mode(e.value)[cite: 1]
+                ).classes('large-toggle mt-1').props('dense unevaluated flat')[cite: 1]
                 
-                with ui.column().classes('w-full items-center mt-1'):
-                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl text-white mb-3 tracking-normal')
+                with ui.column().classes('w-full items-center mt-1'):[cite: 1]
+                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl text-white mb-3 tracking-normal')[cite: 1]
                     
-                    with ui.row().classes('gap-4 h-10 items-center justify-center w-full'):
-                        start_pause_btn = ui.button(on_click=toggle_start_pause).classes('mono-btn').props('flat round size=md')
-                        reset_btn = ui.button(on_click=focus_timer.reset).classes('mono-btn').props('flat round icon=refresh size=md')
-                        stop_btn = ui.button(on_click=focus_timer.stop).classes('mono-btn').props('flat round icon=stop size=md')
+                    with ui.row().classes('gap-4 h-10 items-center justify-center w-full'):[cite: 1]
+                        start_pause_btn = ui.button(on_click=toggle_start_pause).classes('mono-btn').props('flat round size=md')[cite: 1]
+                        reset_btn = ui.button(on_click=focus_timer.reset).classes('mono-btn').props('flat round icon=refresh size=md')[cite: 1]
+                        stop_btn = ui.button(on_click=focus_timer.stop).classes('mono-btn').props('flat round icon=stop size=md')[cite: 1]
 
-                with ui.row().classes('w-full items-center gap-1.5 mt-auto pt-2').style('border-top: 1px solid #141414;'):
-                    ui.label("Today:").classes('text-xs uppercase tracking-wider text-neutral-500')
-                    today_label = ui.label('0h 0m').classes('text-xs text-neutral-300')
+                with ui.row().classes('w-full items-center gap-1.5 mt-auto pt-2').style('border-top: 1px solid #141414;'):[cite: 1]
+                    ui.label("Today:").classes('text-xs uppercase tracking-wider text-neutral-500')[cite: 1]
+                    today_label = ui.label('0h 0m').classes('text-xs text-neutral-300')[cite: 1]
 
-                skip_btn = ui.label('Skip Break »').on('click', focus_timer.skip).classes('absolute bottom-2 right-4 cursor-pointer text-xs text-neutral-600 hover:text-white uppercase tracking-wider transition-colors')
+                skip_btn = ui.label('Skip Break »').on('click', focus_timer.skip).classes('absolute bottom-2 right-4 cursor-pointer text-xs text-neutral-600 hover:text-white uppercase tracking-wider transition-colors')[cite: 1]
 
-    update_clock()
-    update_display()
+    update_clock()[cite: 1]
+    update_display()[cite: 1]
