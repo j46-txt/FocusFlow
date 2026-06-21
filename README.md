@@ -22,6 +22,4 @@ Built with Python and NiceGUI, it provides a distraction-free monochrome interfa
 
 ## About
 
-FocusFlow was developed as a personal project to combine modern local-first technologies with an opinionated, friction-free productivity system.
-
-The project emphasizes software minimalism, complete data privacy, and terminal-inspired design, helping users focus entirely on execution rather than scheduling.
+FocusFlow was developed as a minimalist personal project, aiming for a friction-free productivity system and tracking statistics to improve motivation.
