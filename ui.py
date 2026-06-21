@@ -341,6 +341,10 @@ def build_ui():
 
         timer_label.text = focus_timer.display_time
 
+        # --- Dynamic Browser Tab Title Sync ---
+        mode_label = focus_timer.state.mode.upper() if focus_timer.state.mode == 'break' else focus_timer.state.mode.capitalize()
+        ui.run_javascript(f'document.title = "({focus_timer.display_time}) {mode_label} | FocusFlow"')
+
         skip_btn.set_visibility(is_break)
         reset_btn.set_visibility(is_pomo_mode and status != 'idle')
         stop_btn.set_visibility(is_stopwatch and status != 'idle')
@@ -454,7 +458,6 @@ def build_ui():
             # Statistics card block
             with ui.column().classes('p-4 gap-4 relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
                 with ui.row().classes('w-full justify-between items-center pb-2 mono-divider'):
-                    # Scaled block title text to match text-sm layout rules
                     ui.label('Statistics').classes('text-sm uppercase tracking-wider text-neutral-400')
                 
                 with ui.column().classes('w-full gap-3 text-sm text-neutral-400'):
@@ -474,9 +477,7 @@ def build_ui():
 
             # Timer controls card block
             with ui.column().classes('p-4 gap-4 items-center justify-start relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
-                # Absolute positioning layer decoupling prevents parent titles from layout shifting
                 with ui.row().classes('w-full items-center pb-2 relative').style('height: 32px; min-height: 32px; max-height: 32px; border-bottom: 1px solid #141414;'):
-                    # Scaled block title text to match text-sm layout rules
                     ui.label('Timer').classes('text-sm uppercase tracking-wider text-neutral-400')
                     with ui.row().classes('absolute right-0 top-0 bottom-2 items-center'):
                         timer_status_label = ui.label('[Focus]').classes('rounded-none font-mono')
