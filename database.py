@@ -1,3 +1,5 @@
+# database.py
+# -*- coding: utf-8 -*-
 import sqlite3
 import os
 from contextlib import contextmanager
@@ -6,7 +8,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), 'assets', 'database.sqlite')
 
 @contextmanager
 def get_db():
-    """Provides a transactional database connection."""
+    """Provides a transactional database connection for persistent updates."""
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -17,7 +19,7 @@ def get_db():
         conn.close()
 
 def init_db():
-    """Initializes the database schema."""
+    """Initializes the SQLite tables with schema migrations safely."""
     with get_db() as db:
         db.execute('''
             CREATE TABLE IF NOT EXISTS settings (
@@ -30,10 +32,16 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 is_active BOOLEAN NOT NULL DEFAULT 0,
-                list_order INTEGER NOT NULL
+                list_order INTEGER NOT NULL,
+                weight INTEGER NOT NULL DEFAULT 1
             )
         ''')
-        # Renamed study_sessions to focus_sessions
+        
+        cursor = db.execute("PRAGMA table_info(subjects)")
+        columns = [row['name'] for row in cursor.fetchall()]
+        if 'weight' not in columns:
+            db.execute("ALTER TABLE subjects ADD COLUMN weight INTEGER NOT NULL DEFAULT 1")
+            
         db.execute('''
             CREATE TABLE IF NOT EXISTS focus_sessions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
