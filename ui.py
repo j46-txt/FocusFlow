@@ -117,7 +117,7 @@ def build_ui():
     ''')
 
     # Native reactive page title element to intercept and override main.py dynamically
-    tab_title = ui.page_title()
+    tab_title = ui.page_title(FocusFlow)
 
     cached_stats = {'today': 0, 'week': 0, 'total': 0, 'avg_week_hours': 0.0, 'focus_days': 0}
     
