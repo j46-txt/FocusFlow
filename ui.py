@@ -116,9 +116,6 @@ def build_ui():
     </style>
     ''')
 
-    # Native reactive page title element to intercept and override main.py dynamically
-    tab_title = ui.page_title("FocusFlow")
-
     cached_stats = {'today': 0, 'week': 0, 'total': 0, 'avg_week_hours': 0.0, 'focus_days': 0}
     
     def refresh_cached_stats():
@@ -348,8 +345,8 @@ def build_ui():
         timer_label.text = focus_timer.display_time
 
         # --- Minimalist Browser Tab Title Engine ---
-        # Excludes "FocusFlow" entirely, outputting clean blocks like "(25:00) Focus" or "(00:14) Stopwatch" via native state tracking
-        tab_title.text = f"({focus_timer.display_time}) {mode_label}"
+        # Natively updates the page title on every tick via WebSocket, enforcing pure formatting like "(25:00) Focus"
+        ui.page_title(f"({focus_timer.display_time}) {mode_label}")
 
         skip_btn.set_visibility(is_break)
         reset_btn.set_visibility(is_pomo_mode and status != 'idle')
