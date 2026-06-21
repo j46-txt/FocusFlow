@@ -41,4 +41,5 @@ def main_page():
     user_interface.build_ui()
 
 if __name__ in {"__main__", "__mp_main__"}:
-    ui.run(title="FocusFlow", port=8080, dark=True, show=False)
+    port = int(os.environ.get("PORT", 8080))
+    ui.run(title="FocusFlow", host="0.0.0.0", port=port, dark=True, show=False, favicon="⏳")
