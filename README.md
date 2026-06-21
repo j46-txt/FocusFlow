@@ -1,7 +1,6 @@
 # FocusFlow
 
-FocusFlow is a minimalist study tracker focused on long-term consistency through automatic tracking and frictionless studying.
-It was developed as a minimalist personal project, aiming to create a friction-free productivity system and track statistics to improve motivation.
+FocusFlow is a minimalist study tracker focused on long-term consistency. It was developed as a personal project, aiming to create a friction-free productivity system and track statistics to improve motivation.
 
 ## Features
 
