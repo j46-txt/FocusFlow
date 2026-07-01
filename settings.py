@@ -33,6 +33,10 @@ def get_setting(key: str, default: str) -> str:
     with _CACHE_LOCK:
         if key in _SETTINGS_CACHE:
             return _SETTINGS_CACHE[key]
+        # Optimization: If the cache has been successfully fully populated from disk, 
+        # a missing key means it does not exist in the database. Defer redundant disk IO.
+        if _CACHE_INITIALIZED:
+            return str(default)
             
     try:
         with database.get_db() as db:
