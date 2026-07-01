@@ -18,7 +18,7 @@ def load_cloud_backup():
         conn = psycopg2.connect(POSTGRES_URL)
         cur = conn.cursor()
         cur.execute('''
-            CREATE TABLE IF NOT EXISTS focusflow_backup (
+            CREATE TABLE IF NOT EXISTS cafe_backup (
                 id INTEGER PRIMARY KEY,
                 file_data BYTEA,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -26,7 +26,7 @@ def load_cloud_backup():
         ''')
         conn.commit()
         
-        cur.execute("SELECT file_data FROM focusflow_backup WHERE id = 1;")
+        cur.execute("SELECT file_data FROM cafe_backup WHERE id = 1;")
         row = cur.fetchone()
         if row and row[0]:
             os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -48,7 +48,7 @@ def save_cloud_backup(binary_data: bytes):
         conn = psycopg2.connect(POSTGRES_URL)
         cur = conn.cursor()
         cur.execute('''
-            INSERT INTO focusflow_backup (id, file_data, updated_at)
+            INSERT INTO cafe_backup (id, file_data, updated_at)
             VALUES (1, %s, CURRENT_TIMESTAMP)
             ON CONFLICT (id) DO UPDATE SET file_data = EXCLUDED.file_data, updated_at = CURRENT_TIMESTAMP;
         ''', (psycopg2.Binary(binary_data),))
@@ -79,7 +79,6 @@ def get_db():
     finally:
         changes = conn.total_changes
         conn.close()
-        # Safe memory snapshot transfer to avoid file-lock race conditions
         if changes > 0:
             try:
                 if os.path.exists(DB_PATH):
