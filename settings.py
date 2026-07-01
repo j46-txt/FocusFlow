@@ -1,17 +1,26 @@
 # settings.py
 # -*- coding: utf-8 -*-
 import database
+import sqlite3
 
 def get_setting(key: str, default: str) -> str:
-    """Retrieves configuration data strings from the database table."""
-    with database.get_db() as db:
-        row = db.execute('SELECT value FROM settings WHERE key = ?', (key,)).fetchone()
-        return row['value'] if row else str(default)
+    """Retrieves configuration data strings from the database table with import-time safety."""
+    try:
+        with database.get_db() as db:
+            row = db.execute('SELECT value FROM settings WHERE key = ?', (key,)).fetchone()
+            return row['value'] if row else str(default)
+    except sqlite3.OperationalError:
+        # Table doesn't exist yet (safely handles early queries triggered during import phase)
+        return str(default)
 
 def set_setting(key: str, value: str) -> None:
     """Saves or replaces a distinct configuration key state."""
-    with database.get_db() as db:
-        db.execute('REPLACE INTO settings (key, value) VALUES (?, ?)', (key, str(value)))
+    try:
+        with database.get_db() as db:
+            db.execute('REPLACE INTO settings (key, value) VALUES (?, ?)', (key, str(value)))
+    except sqlite3.OperationalError:
+        # Prevents early write crashes if configuration states are modified pre-hook
+        pass
 
 def get_weekly_goal_hours() -> int:
     """Gets the weekly goal. Defaults strictly to 10 hours."""
