@@ -24,4 +24,4 @@ def main_page(key: str = None):
 
 if __name__ in {"__main__", "__mp_main__"}:
     port = int(os.environ.get("PORT", 8080))
-    ui.run(title="CaFE", host="0.0.0.0", port=port, dark=True, show=False, favicon="☕")
+    ui.run(title="CaFE", host="0.0.0.0", port=port, dark=True, show=False, favicon="☕︎")
