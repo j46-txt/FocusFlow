@@ -2,22 +2,59 @@
 # -*- coding: utf-8 -*-
 import database
 import sqlite3
+import threading
+
+# Thread-safe global memory cache to prevent synchronous database read contention on the hot path (ASGI ticker loop)
+_SETTINGS_CACHE = {}
+_CACHE_LOCK = threading.Lock()
+_CACHE_INITIALIZED = False
+
+def _ensure_cache_populated():
+    """Guarantees the rapid configuration memory map is hydrated using a double-checked lock pattern."""
+    global _CACHE_INITIALIZED
+    if _CACHE_INITIALIZED:
+        return
+    with _CACHE_LOCK:
+        if _CACHE_INITIALIZED:
+            return
+        try:
+            with database.get_db() as db:
+                rows = db.execute('SELECT key, value FROM settings').fetchall()
+                for row in rows:
+                    _SETTINGS_CACHE[row['key']] = row['value']
+            _CACHE_INITIALIZED = True
+        except sqlite3.Error:
+            # Safe defensive fallback: if migrations haven't run yet, defer initialization
+            pass
 
 def get_setting(key: str, default: str) -> str:
-    """Retrieves configuration data strings from the database table with import-time safety."""
+    """Retrieves configuration data strings directly from fast memory, bypassing disk read loops."""
+    _ensure_cache_populated()
+    with _CACHE_LOCK:
+        if key in _SETTINGS_CACHE:
+            return _SETTINGS_CACHE[key]
+            
     try:
         with database.get_db() as db:
             row = db.execute('SELECT value FROM settings WHERE key = ?', (key,)).fetchone()
-            return row['value'] if row else str(default)
+            if row:
+                with _CACHE_LOCK:
+                    _SETTINGS_CACHE[key] = row['value']
+                return row['value']
+            return str(default)
     except sqlite3.Error:
-        # Catch all generalized engine database exceptions to ensure absolute safety during lazy parsing
         return str(default)
 
 def set_setting(key: str, value: str) -> None:
-    """Saves or replaces a distinct configuration key state."""
+    """Saves configuration to disk and instantly propagates changes to the local memory cache."""
+    _ensure_cache_populated()
+    val_str = str(value)
+    with _CACHE_LOCK:
+        _SETTINGS_CACHE[key] = val_str
+        
     try:
         with database.get_db() as db:
-            db.execute('REPLACE INTO settings (key, value) VALUES (?, ?)', (key, str(value)))
+            db.execute('REPLACE INTO settings (key, value) VALUES (?, ?)', (key, val_str))
     except sqlite3.Error:
         # Prevents early initialization write anomalies if state changes occur before table migration hooks
         pass
