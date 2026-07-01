@@ -31,15 +31,15 @@ class FocusTimer:
             elif self.state.mode == 'break':
                 self.state.seconds_remaining = self.break_duration
 
-        def start(self) -> None:
-            if self.state.status == 'idle':
-                self.sync_durations()
-                if self.state.mode == 'stopwatch':
-                    self.state.seconds_elapsed = 0
-                self.state.seconds_focused_in_turn = 0
-            self.state.status = 'running'
-            self._last_tick_time = time.time()
-            self.on_tick()
+    def start(self) -> None:
+        if self.state.status == 'idle':
+            self.sync_durations()
+            if self.state.mode == 'stopwatch':
+                self.state.seconds_elapsed = 0
+            self.state.seconds_focused_in_turn = 0
+        self.state.status = 'running'
+        self._last_tick_time = time.time()
+        self.on_tick()
 
     def pause(self) -> None:
         if self.state.status == 'running':
