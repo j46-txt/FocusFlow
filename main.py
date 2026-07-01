@@ -1,6 +1,7 @@
 # main.py
 # -*- coding: utf-8 -*-
 import os
+import asyncio
 from nicegui import app, ui
 import database
 import subjects
@@ -8,15 +9,17 @@ import ui as user_interface
 
 # Monolithic single-entry startup pipeline to orchestrate dependency loading sequentially
 @app.on_startup
-def initialize_application_state():
+async def initialize_application_state():
+    loop = asyncio.get_running_loop()
+    
     print("[Lifecycle] Stage 1: Initializing local/cloud database storage...")
-    database.init_db()
+    await loop.run_in_executor(None, database.init_db)
     
     print("[Lifecycle] Stage 2: Seeding relational tables...")
-    subjects.seed_default_subjects()
+    await loop.run_in_executor(None, subjects.seed_default_subjects)
     
     print("[Lifecycle] Stage 3: Hydrating user interface state caches...")
-    user_interface.load_initial_stats()
+    await loop.run_in_executor(None, user_interface.load_initial_stats)
     print("[Lifecycle] System startup sequence completed successfully.")
 
 @ui.page('/')
