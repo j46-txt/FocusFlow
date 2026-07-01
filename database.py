@@ -31,6 +31,16 @@ def load_cloud_backup():
         row = cur.fetchone()
         if row and row[0]:
             os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+            
+            # Remove any stale WAL/SHM log files to avoid structural mismatch with the incoming backup
+            for suffix in ['-wal', '-shm']:
+                stale_file = DB_PATH + suffix
+                if os.path.exists(stale_file):
+                    try:
+                        os.remove(stale_file)
+                    except Exception:
+                        pass
+                        
             with open(DB_PATH, 'wb') as f:
                 f.write(bytes(row[0]))
             print("[Backup] SQLite database successfully restored from the cloud!")
@@ -75,6 +85,12 @@ def get_db():
         # Set a prolonged timeout threshold to survive transient write-locks across multiple threads
         conn = sqlite3.connect(DB_PATH, timeout=30.0)
         conn.row_factory = sqlite3.Row
+        
+        # CRITICAL FIX: SQLite PRAGMAs must be issued at the connection level outside of multi-statement transactions.
+        # Enforcing WAL mode here guarantees concurrent read-write capabilities on every active session thread.
+        conn.execute('PRAGMA journal_mode=WAL;')
+        conn.execute('PRAGMA synchronous=NORMAL;')
+        
         yield conn
         conn.commit()
         tx_committed = True
@@ -84,8 +100,19 @@ def get_db():
         raise
     finally:
         if conn:
-            changes = conn.total_changes
+            try:
+                changes = conn.total_changes
+                # CRITICAL FIX: If local modifications occurred, force a full synchronous WAL checkpoint.
+                # This guarantees that delta frames are flushed back into the primary 'database.sqlite' file
+                # BEFORE we read the file binary for cloud synchronization.
+                if tx_committed and changes > 0:
+                    conn.execute('PRAGMA wal_checkpoint(TRUNCATE);')
+            except Exception as e:
+                print(f"[Checkpoint Error] Failed to flush WAL to disk: {e}")
+                changes = 0
+                
             conn.close()
+            
             # Optimization: Only push to the cloud if the local write was successfully committed
             if tx_committed and changes > 0:
                 try:
@@ -101,10 +128,6 @@ def init_db():
     load_cloud_backup()
     
     with get_db() as db:
-        # Enforce WAL (Write-Ahead Logging) and normal synchronous modes to allow concurrent readers and prevent locks
-        db.execute('PRAGMA journal_mode=WAL;')
-        db.execute('PRAGMA synchronous=NORMAL;')
-        
         db.execute('''
             CREATE TABLE IF NOT EXISTS settings (
                 key TEXT PRIMARY KEY,
@@ -139,3 +162,8 @@ def init_db():
                 FOREIGN KEY (subject_id) REFERENCES subjects(id)
             )
         ''')
+        
+        # PERFORMANCE OPTIMIZATION: Seed necessary indices to prevent future table scans 
+        # as focus log dimensions expand under long-term usage.
+        db.execute('CREATE INDEX IF NOT EXISTS idx_focus_sessions_start_date ON focus_sessions(start_date);')
+        db.execute('CREATE INDEX IF NOT EXISTS idx_focus_sessions_subject_id ON focus_sessions(subject_id);')
