@@ -4,10 +4,14 @@ import sqlite3
 import os
 import psycopg2
 import threading
+import queue
 from contextlib import contextmanager
 
 DB_PATH = os.path.join(os.path.dirname(__file__), 'assets', 'database.sqlite')
 POSTGRES_URL = os.environ.get('DATABASE_URL')
+
+# Thread-safe queue to sequentialize cloud backup tasks and avoid thread explosions or out-of-order writes
+BACKUP_QUEUE = queue.Queue(maxsize=1)
 
 def load_cloud_backup():
     """Fetches the binary SQLite file from the cloud and restores it locally on boot."""
@@ -70,10 +74,35 @@ def save_cloud_backup(binary_data: bytes):
     except Exception as e:
         print(f"[Backup Error] Failed to save backup to cloud: {e}")
 
-def save_cloud_backup_background(binary_data: bytes):
-    """Triggers the cloud backup network upload in a separate non-blocking thread."""
-    thread = threading.Thread(target=save_cloud_backup, args=(binary_data,), daemon=True)
-    thread.start()
+def _backup_worker():
+    """Dedicated background thread worker that sequentially uploads database snapshots."""
+    while True:
+        try:
+            # Block until a synchronization signal is queued
+            BACKUP_QUEUE.get()
+            if os.path.exists(DB_PATH):
+                try:
+                    with open(DB_PATH, 'rb') as f:
+                        binary_data = f.read()
+                    save_cloud_backup(binary_data)
+                except Exception as e:
+                    print(f"[Backup Error] Failed to read database snapshot inside worker: {e}")
+        except Exception as e:
+            print(f"[Backup Worker Error] Critical failure in background backup loop: {e}")
+        finally:
+            BACKUP_QUEUE.task_done()
+
+# Start the persistent background synchronization thread immediately upon module import
+threading.Thread(target=_backup_worker, daemon=True, name="CaFE-BackupWorker").start()
+
+def save_cloud_backup_background():
+    """Triggers cloud backup network upload by notifying the serialized background queue worker."""
+    try:
+        # Coalesce concurrent requests: if an upload is pending, drop this request 
+        # since the worker will inherently capture the latest disk state on its next pass.
+        BACKUP_QUEUE.put_nowait(True)
+    except queue.Full:
+        pass
 
 @contextmanager
 def get_db():
@@ -86,7 +115,6 @@ def get_db():
         conn = sqlite3.connect(DB_PATH, timeout=30.0)
         conn.row_factory = sqlite3.Row
         
-        # CRITICAL FIX: SQLite PRAGMAs must be issued at the connection level outside of multi-statement transactions.
         # Enforcing WAL mode here guarantees concurrent read-write capabilities on every active session thread.
         conn.execute('PRAGMA journal_mode=WAL;')
         conn.execute('PRAGMA synchronous=NORMAL;')
@@ -102,7 +130,7 @@ def get_db():
         if conn:
             try:
                 changes = conn.total_changes
-                # CRITICAL FIX: If local modifications occurred, force a full synchronous WAL checkpoint.
+                # If local modifications occurred, force a full synchronous WAL checkpoint.
                 # This guarantees that delta frames are flushed back into the primary 'database.sqlite' file
                 # BEFORE we read the file binary for cloud synchronization.
                 if tx_committed and changes > 0:
@@ -115,13 +143,7 @@ def get_db():
             
             # Optimization: Only push to the cloud if the local write was successfully committed
             if tx_committed and changes > 0:
-                try:
-                    if os.path.exists(DB_PATH):
-                        with open(DB_PATH, 'rb') as f:
-                            binary_data = f.read()
-                        save_cloud_backup_background(binary_data)
-                except Exception as e:
-                    print(f"[Backup Error] Failed to read database snapshot: {e}")
+                save_cloud_backup_background()
 
 def init_db():
     """Initializes the SQLite tables with schema migrations safely."""
