@@ -20,7 +20,7 @@ def initialize_application_state():
     print("[Lifecycle] System startup sequence completed successfully.")
 
 @ui.page('/')
-def main_page(key: str = None):
+async def main_page(key: str = None):
     """Binds application context channels with a secret key gatekeeper."""
     allowed_key = os.environ.get('ACCESS_KEY', '')
     
@@ -29,7 +29,7 @@ def main_page(key: str = None):
             ui.label('404 Not Found').classes('text-neutral-700 text-sm tracking-widest font-mono')
         return
 
-    user_interface.build_ui()
+    await user_interface.build_ui()
 
 if __name__ in {"__main__", "__mp_main__"}:
     port = int(os.environ.get("PORT", 8080))
