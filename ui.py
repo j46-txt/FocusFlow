@@ -34,7 +34,7 @@ def global_on_session_complete(duration_seconds: int, mode: str):
         loop = asyncio.get_running_loop()
         loop.run_in_executor(None, save_and_refresh)
     except RuntimeError:
-        # Robust fallback fallback for non-async calling parameters
+        # Robust fallback for non-async calling parameters
         threading.Thread(target=save_and_refresh, daemon=True).start()
 
 def global_on_timer_end(mode: str):
@@ -68,8 +68,8 @@ def load_initial_stats():
     except Exception as e:
         print(f"[Hydration Error] Failed to initialize ui cache elements: {e}")
 
-def build_ui():
-    """Builds the main user interface layout."""
+async def build_ui():
+    """Builds the main user interface layout asynchronously without event loop stalls."""
     global active_clients
     
     client = ui.context.client
@@ -210,10 +210,12 @@ def build_ui():
                     ui.label('This will permanently delete all logged focus sessions.').classes('text-xs text-neutral-500 mb-4')
                     with ui.row().classes('w-full justify-end gap-2'):
                         ui.button('Cancel', on_click=confirm_dialog.close).classes('mono-btn text-xs')
-                        def perform_reset():
-                            with database.get_db() as db:
-                                db.execute('DELETE FROM focus_sessions')
-                            refresh_global_cache()
+                        async def perform_reset():
+                            def b_delete():
+                                with database.get_db() as db:
+                                    db.execute('DELETE FROM focus_sessions')
+                                refresh_global_cache()
+                            await asyncio.get_running_loop().run_in_executor(None, b_delete)
                             update_display()
                             confirm_dialog.close()
                             dialog.close()
@@ -223,52 +225,62 @@ def build_ui():
                 
             ui.button('Reset statistics', on_click=confirm_reset).props('flat dense').classes('text-red-500/70 hover:text-red-400 text-xs self-start mb-3').style('text-transform: none; padding-left: 0;')
 
-            def save_settings():
-                settings.set_setting('pomodoro_minutes', int(pomo_input.value))
-                settings.set_setting('break_minutes', int(break_input.value))
-                settings.set_setting('weekly_goal_hours', int(goal_input.value))
-                settings.set_auto_rotate(auto_rotate.value)
-                focus_timer.sync_durations()
-                refresh_global_cache()
+            async def save_settings():
+                def b_save():
+                    settings.set_setting('pomodoro_minutes', int(pomo_input.value))
+                    settings.set_setting('break_minutes', int(break_input.value))
+                    settings.set_setting('weekly_goal_hours', int(goal_input.value))
+                    settings.set_auto_rotate(auto_rotate.value)
+                    focus_timer.sync_durations()
+                    refresh_global_cache()
+                await asyncio.get_running_loop().run_in_executor(None, b_save)
                 update_display()
                 dialog.close()
 
             ui.button('Save Changes', on_click=save_settings).classes('w-full mono-btn mb-1')
         dialog.open()
 
-    def open_suggestions_panel():
+    async def open_suggestions_panel():
         with ui.dialog() as dialog, ui.card().classes('w-[360px] rounded-none p-4 mono-card'):
             ui.label('Edit Suggestions').classes('text-xs text-white uppercase tracking-wider mb-3')
             
             with ui.row().classes('w-full items-center gap-1 mb-3 pb-3 mono-divider'):
                 new_name = ui.input(placeholder='Activity name').classes('w-36').props('dense dark')
                 new_weight = ui.number(value=1, format='%.0f').classes('w-10').props('dense dark')
-                def quick_add():
+                async def quick_add():
                     if new_name.value:
-                        subjects.add_subject(new_name.value, int(new_weight.value) if new_weight.value else 1)
+                        name = new_name.value
+                        weight = int(new_weight.value) if new_weight.value else 1
+                        def b_add():
+                            subjects.add_subject(name, weight)
+                            refresh_global_cache()
+                        await asyncio.get_running_loop().run_in_executor(None, b_add)
                         new_name.value = ''
-                        refresh_global_cache()
-                        rebuild_management_view()
+                        await rebuild_management_view()
                         update_display()
                 ui.button('Add', on_click=quick_add).classes('mono-btn text-xs py-1')
 
             subject_list_container = ui.column().classes('w-full gap-1 mb-4 max-h-48 overflow-y-auto')
             
-            def trigger_update(s_id, name_val, weight_val):
-                subjects.update_subject(s_id, name_val, int(weight_val) if weight_val else 1)
-                refresh_global_cache()
-                rebuild_management_view()
+            async def trigger_update(s_id, name_val, weight_val):
+                def b_update():
+                    subjects.update_subject(s_id, name_val, int(weight_val) if weight_val else 1)
+                    refresh_global_cache()
+                await asyncio.get_running_loop().run_in_executor(None, b_update)
+                await rebuild_management_view()
                 update_display()
 
-            def trigger_delete(s_id):
-                subjects.delete_subject(s_id)
-                refresh_global_cache()
-                rebuild_management_view()
+            async def trigger_delete(s_id):
+                def b_delete():
+                    subjects.delete_subject(s_id)
+                    refresh_global_cache()
+                await asyncio.get_running_loop().run_in_executor(None, b_delete)
+                await rebuild_management_view()
                 update_display()
             
-            def rebuild_management_view():
+            async def rebuild_management_view():
+                all_items = await asyncio.get_running_loop().run_in_executor(None, subjects.get_all_subjects)
                 subject_list_container.clear()
-                all_items = subjects.get_all_subjects()
                 
                 with subject_list_container:
                     if not all_items:
@@ -284,7 +296,7 @@ def build_ui():
                                 ui.button(icon='delete', on_click=lambda e, sid=sub.id: trigger_delete(sid)).props('flat dense size=sm color=grey')
 
             ui.button('Close Panel', on_click=dialog.close).classes('w-full mono-btn mt-1')
-            rebuild_management_view()
+            await rebuild_management_view()
         dialog.open()
 
     def open_help_panel():
@@ -303,12 +315,8 @@ def build_ui():
             ui.button('Close Info', on_click=dialog.close).classes('w-full mono-btn mt-4 text-xs')
         dialog.open()
 
-    def open_history_panel():
-        with ui.dialog() as dialog, ui.card().classes('w-[480px] rounded-none p-4 mono-card'):
-            with ui.row().classes('w-full justify-between items-center mb-3 pb-1 mono-divider'):
-                ui.label('Focus Sessions Log').classes('text-xs text-white uppercase tracking-wider')
-                ui.button('Export CSV', on_click=download_csv_log).classes('mono-btn').style('font-size: 10px !important; padding: 2px 8px !important; height: auto; min-height: 0;')
-            
+    async def open_history_panel():
+        def fetch_history_data():
             with database.get_db() as db:
                 summary_rows = db.execute('''
                     SELECT start_date, SUM(duration_seconds) as total_sec 
@@ -316,6 +324,23 @@ def build_ui():
                     GROUP BY start_date 
                     ORDER BY start_date DESC LIMIT 7
                 ''').fetchall()
+                summary = [dict(r) for r in summary_rows]
+                
+                rows = db.execute('''
+                    SELECT fs.start_date, fs.duration_seconds, s.name as subject_name
+                    FROM focus_sessions fs
+                    LEFT JOIN subjects s ON fs.subject_id = s.id
+                    ORDER BY fs.id DESC LIMIT 50
+                ''').fetchall()
+                logs = [dict(r) for r in rows]
+            return summary, logs
+
+        summary_rows, rows = await asyncio.get_running_loop().run_in_executor(None, fetch_history_data)
+
+        with ui.dialog() as dialog, ui.card().classes('w-[480px] rounded-none p-4 mono-card'):
+            with ui.row().classes('w-full justify-between items-center mb-3 pb-1 mono-divider'):
+                ui.label('Focus Sessions Log').classes('text-xs text-white uppercase tracking-wider')
+                ui.button('Export CSV', on_click=download_csv_log).classes('mono-btn').style('font-size: 10px !important; padding: 2px 8px !important; height: auto; min-height: 0;')
             
             if summary_rows:
                 ui.label('Weekly Activity Blueprint:').classes('text-[11px] text-neutral-500 uppercase mb-1')
@@ -328,14 +353,6 @@ def build_ui():
             log_container = ui.column().classes('w-full gap-1 max-h-48 overflow-y-auto mb-4 text-xs text-neutral-400')
             
             with log_container:
-                with database.get_db() as db:
-                    rows = db.execute('''
-                        SELECT fs.start_date, fs.duration_seconds, s.name as subject_name
-                        FROM focus_sessions fs
-                        LEFT JOIN subjects s ON fs.subject_id = s.id
-                        ORDER BY fs.id DESC LIMIT 50
-                    ''').fetchall()
-                
                 if not rows:
                     ui.label('[No sessions recorded yet]').classes('text-xs text-neutral-600 italic')
                 else:
@@ -465,8 +482,10 @@ def build_ui():
         timer_status_label.update()
         week_progress.update()
 
-    subjects.ensure_daily_rotation()
-    refresh_global_cache()  
+    # Offload initial database hits into the worker pool execution thread to ensure zero event loop freezes
+    await asyncio.get_running_loop().run_in_executor(
+        None, lambda: (subjects.ensure_daily_rotation(), refresh_global_cache())
+    )
     
     def update_clock():
         now = datetime.datetime.now()
