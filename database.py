@@ -19,61 +19,65 @@ def load_cloud_backup():
     if not POSTGRES_URL:
         print("[Backup] DATABASE_URL not found. Running in ephemeral local-only mode.")
         return
+    conn = None
     try:
         # Prevent infinite connection hangs during remote network dropouts or database cold starts
         conn = psycopg2.connect(POSTGRES_URL, connect_timeout=5)
-        cur = conn.cursor()
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS cafe_backup (
-                id INTEGER PRIMARY KEY,
-                file_data BYTEA,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        ''')
-        conn.commit()
-        
-        cur.execute("SELECT file_data FROM cafe_backup WHERE id = 1;")
-        row = cur.fetchone()
-        if row and row[0]:
-            os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+        with conn.cursor() as cur:
+            cur.execute('''
+                CREATE TABLE IF NOT EXISTS cafe_backup (
+                    id INTEGER PRIMARY KEY,
+                    file_data BYTEA,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            ''')
+            conn.commit()
             
-            # Remove any stale WAL/SHM log files to avoid structural mismatch with the incoming backup
-            for suffix in ['-wal', '-shm']:
-                stale_file = DB_PATH + suffix
-                if os.path.exists(stale_file):
-                    try:
-                        os.remove(stale_file)
-                    except Exception:
-                        pass
-                        
-            with open(DB_PATH, 'wb') as f:
-                f.write(bytes(row[0]))
-            print("[Backup] SQLite database successfully restored from the cloud!")
-        else:
-            print("[Backup] No remote backup found. Initializing a clean database.")
-        cur.close()
-        conn.close()
+            cur.execute("SELECT file_data FROM cafe_backup WHERE id = 1;")
+            row = cur.fetchone()
+            if row and row[0]:
+                os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+                
+                # Remove any stale WAL/SHM log files to avoid structural mismatch with the incoming backup
+                for suffix in ['-wal', '-shm']:
+                    stale_file = DB_PATH + suffix
+                    if os.path.exists(stale_file):
+                        try:
+                            os.remove(stale_file)
+                        except Exception:
+                            pass
+                            
+                with open(DB_PATH, 'wb') as f:
+                    f.write(bytes(row[0]))
+                print("[Backup] SQLite database successfully restored from the cloud!")
+            else:
+                print("[Backup] No remote backup found. Initializing a clean database.")
     except Exception as e:
         print(f"[Backup Error] Failed to load backup from cloud: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 def save_cloud_backup(binary_data: bytes):
     """Uploads the consolidated local SQLite data to the cloud via a clean connection."""
     if not POSTGRES_URL:
         return
+    conn = None
     try:
         conn = psycopg2.connect(POSTGRES_URL, connect_timeout=5)
-        cur = conn.cursor()
-        cur.execute('''
-            INSERT INTO cafe_backup (id, file_data, updated_at)
-            VALUES (1, %s, CURRENT_TIMESTAMP)
-            ON CONFLICT (id) DO UPDATE SET file_data = EXCLUDED.file_data, updated_at = CURRENT_TIMESTAMP;
-        ''', (psycopg2.Binary(binary_data),))
-        conn.commit()
-        cur.close()
-        conn.close()
+        with conn.cursor() as cur:
+            cur.execute('''
+                INSERT INTO cafe_backup (id, file_data, updated_at)
+                VALUES (1, %s, CURRENT_TIMESTAMP)
+                ON CONFLICT (id) DO UPDATE SET file_data = EXCLUDED.file_data, updated_at = CURRENT_TIMESTAMP;
+            ''', (psycopg2.Binary(binary_data),))
+            conn.commit()
         print("[Backup] Changes successfully synchronized to the cloud.")
     except Exception as e:
         print(f"[Backup Error] Failed to save backup to cloud: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 def _backup_worker():
     """Dedicated background thread worker that sequentially uploads database snapshots using SQLite's online backup API."""
@@ -83,6 +87,8 @@ def _backup_worker():
             BACKUP_QUEUE.get()
             if os.path.exists(DB_PATH):
                 tmp_path = None
+                src_conn = None
+                dst_conn = None
                 try:
                     # Use SQLite native backup API to create a consistent point-in-time file snapshot.
                     # This eliminates torn reads from concurrent writes and removes hot-path checkpoint overhead.
@@ -93,7 +99,9 @@ def _backup_worker():
                     dst_conn = sqlite3.connect(tmp_path)
                     src_conn.backup(dst_conn)
                     dst_conn.close()
+                    dst_conn = None
                     src_conn.close()
+                    src_conn = None
                     
                     with open(tmp_path, 'rb') as f:
                         binary_data = f.read()
@@ -102,6 +110,16 @@ def _backup_worker():
                 except Exception as e:
                     print(f"[Backup Error] Failed to generate consistent database snapshot inside worker: {e}")
                 finally:
+                    if dst_conn:
+                        try:
+                            dst_conn.close()
+                        except Exception:
+                            pass
+                    if src_conn:
+                        try:
+                            src_conn.close()
+                        except Exception:
+                            pass
                     if tmp_path and os.path.exists(tmp_path):
                         try:
                             os.remove(tmp_path)
