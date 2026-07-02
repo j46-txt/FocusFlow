@@ -113,7 +113,12 @@ async def build_ui():
             border-bottom: 1px solid #16100d !important;
         }
         
-        /* BOTÕES RETANGULARES PADRÃO */
+        /* PROPRIETARY SEMANTIC CLASSES IN ENGLISH */
+        .frappe-light { color: #ebdcd0 !important; }
+        .frappe-dark { color: #59514a !important; }
+        .frappe-muted { color: #382d26 !important; }
+        
+        /* STANDARD RECTANGULAR BUTTONS */
         .mono-btn {
             background-color: #000000 !important;
             border: 1px solid #16100d !important;
@@ -131,24 +136,25 @@ async def build_ui():
             border-color: #382d26 !important;
         }
         
-        /* BOTÕES DE CONTROLE DO TIMER (START, PAUSE, RESTART) - VAZADOS COM ÍCONE MARROM MAIS CLARO */
+        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - OUTLINED WITH UNIFIED BROWN ICON, NO BORDER */
         html body .q-btn.mono-btn.q-btn--round {
             background-color: #000000 !important;
             background: #000000 !important;
-            border: 1px solid #16100d !important;
+            border: none !important;
             box-shadow: none !important;
         }
         html body .q-btn.mono-btn.q-btn--round .q-icon,
         html body .q-btn.mono-btn.q-btn--round .q-btn__content {
-            color: #9c6f52 !important;
+            color: #4e3629 !important;
+            font-size: 28px !important;
         }
         html body .q-btn.mono-btn.q-btn--round:hover {
-            background-color: #120c09 !important;
-            border-color: #382d26 !important;
+            background-color: transparent !important;
+            border: none !important;
         }
         html body .q-btn.mono-btn.q-btn--round:hover .q-icon,
         html body .q-btn.mono-btn.q-btn--round:hover .q-btn__content {
-            color: #ebdcd0 !important;
+            color: #6f4e37 !important;
         }
         
         .inline-mono-btn {
@@ -166,7 +172,6 @@ async def build_ui():
             align-items: center !important;
             transition: all 0.1s ease-in-out;
         }
-
         .inline-mono-btn .q-btn__content {
             min-height: unset !important;
             line-height: 1 !important;
@@ -174,23 +179,22 @@ async def build_ui():
             display: flex !important;
             align-items: center !important;
         }
-        
         .inline-mono-btn:hover {
             background-color: #6f4e37 !important;
             border-color: #6f4e37 !important;
             color: #ffffff !important;
         }
         
-        /* LINKS (SHOW MORE) */
+        /* ACTION LINKS (SHOW MORE) - MAPS TO UNIFIED BROWN */
         .blue-link {
-            color: #9c6f52 !important;
+            color: #4e3629 !important;
             transition: color 0.1s ease-in-out;
         }
         .blue-link:hover {
             color: #ebdcd0 !important;
         }
         
-        /* BLOQUEIO DO SELETOR COMPLETO COMBINANDO ATRIBUTOS DE NATIVOS DE ESTADO (ARIA-PRESSED) */
+        /* TIMER MODE TOGGLE (POMODORO / STOPWATCH) - LOCKED WITH ACCESSIBILITY ATTRIBUTES */
         html body .large-toggle .q-btn {
             font-size: 13px !important;
             padding: 3px 10px !important;
@@ -198,12 +202,15 @@ async def build_ui():
             box-shadow: none !important;
             transition: none !important;
         }
-        /* Força o Estado Inativo (Não Selecionado) em todas as interações */
+        /* Static Stable Inactive State */
         html body .large-toggle .q-btn,
         html body .large-toggle .q-btn[aria-pressed="false"],
         html body .large-toggle .q-btn[aria-pressed="false"]:hover,
         html body .large-toggle .q-btn[aria-pressed="false"]:focus,
-        html body .large-toggle .q-btn[aria-pressed="false"]:active {
+        html body .large-toggle .q-btn[aria-pressed="false"]:active,
+        html body .large-toggle .q-btn:not(.q-btn--active):hover,
+        html body .large-toggle .q-btn:not(.q-btn--active):focus,
+        html body .large-toggle .q-btn:not(.q-btn--active):active {
             background-color: #000000 !important;
             background: #000000 !important;
             border: 1px solid #16100d !important;
@@ -212,14 +219,20 @@ async def build_ui():
         html body .large-toggle .q-btn[aria-pressed="false"] .q-btn__content,
         html body .large-toggle .q-btn[aria-pressed="false"]:hover .q-btn__content,
         html body .large-toggle .q-btn[aria-pressed="false"]:focus .q-btn__content,
-        html body .large-toggle .q-btn[aria-pressed="false"]:active .q-btn__content {
+        html body .large-toggle .q-btn[aria-pressed="false"]:active .q-btn__content,
+        html body .large-toggle .q-btn:not(.q-btn--active):hover .q-btn__content,
+        html body .large-toggle .q-btn:not(.q-btn--active):focus .q-btn__content,
+        html body .large-toggle .q-btn:not(.q-btn--active):active .q-btn__content {
             color: #4a413a !important;
         }
-        /* Força o Estado Ativo (Selecionado) em todas as interações */
+        /* Static Stable Active State - MAPS TO UNIFIED BROWN */
         html body .large-toggle .q-btn[aria-pressed="true"],
         html body .large-toggle .q-btn[aria-pressed="true"]:hover,
         html body .large-toggle .q-btn[aria-pressed="true"]:focus,
-        html body .large-toggle .q-btn[aria-pressed="true"]:active {
+        html body .large-toggle .q-btn[aria-pressed="true"]:active,
+        html body .large-toggle .q-btn.q-btn--active:hover,
+        html body .large-toggle .q-btn.q-btn--active:focus,
+        html body .large-toggle .q-btn.q-btn--active:active {
             background-color: #4e3629 !important;
             background: #4e3629 !important;
             border: 1px solid #4e3629 !important;
@@ -227,17 +240,19 @@ async def build_ui():
         html body .large-toggle .q-btn[aria-pressed="true"] .q-btn__content,
         html body .large-toggle .q-btn[aria-pressed="true"]:hover .q-btn__content,
         html body .large-toggle .q-btn[aria-pressed="true"]:focus .q-btn__content,
-        html body .large-toggle .q-btn[aria-pressed="true"]:active .q-btn__content {
+        html body .large-toggle .q-btn[aria-pressed="true"]:active .q-btn__content,
+        html body .large-toggle .q-btn.q-btn--active:hover .q-btn__content,
+        html body .large-toggle .q-btn.q-btn--active:focus .q-btn__content,
+        html body .large-toggle .q-btn.q-btn--active:active .q-btn__content {
             color: #ebdcd0 !important;
         }
-        /* Remove helpers de foco nativos que causavam interferência residual */
         html body .large-toggle .q-btn .q-focus-helper, 
         html body .large-toggle .q-btn .q-ripple {
             display: none !important;
             opacity: 0 !important;
         }
         
-        /* BOTÕES DE ÍCONE PLANOS (Help e Settings) */
+        /* FLAT ICON INTERACTIVE BUTTONS (Help and Settings) */
         .q-btn.text-grey, .q-btn.text-grey .q-icon {
             color: #59514a !important;
         }
@@ -251,7 +266,7 @@ async def build_ui():
         }
         .q-field--outlined .q-field__control { border: 1px solid #16100d !important; border-radius: 0px !important; }
         
-        /* BARRA DE PROGRESSO: OCA COM CONTORNO EM MARROM ESCURO */
+        /* PROGRESS BAR: HOLLOW CONTEXT WITH DARK UNIFIED BROWN BORDER */
         html body .q-linear-progress { 
             background-color: #000000 !important; 
             background: #000000 !important;
@@ -274,9 +289,17 @@ async def build_ui():
             background-size: 200% 200% !important;
             animation: gradient-flow-right 3s linear infinite !important;
         }
+        
+        /* SKIP BREAK LINK SHORTCUT BUTTON */
+        .skip-btn-custom {
+            color: #59514a !important;
+        }
+        .skip-btn-custom:hover {
+            color: #ebdcd0 !important;
+        }
 
-        /* ANULAÇÃO ABSOLUTA E DESCENDENTE PROFUNDA DE BRANCOS E CINZAS */
-        /* Alvo de Destaque Principal: Números, Valores, Timer, Sugestão Ativa, Saudação e Itens Internos */
+        /* OVERRIDE SCOPES FOR DYNAMIC DATA LABELS */
+        /* High Visibility Group: Numbers, Counters, Main Timer, Greeting, Panel Card Titles */
         html body .text-white, 
         html body [class*="text-white"],
         html body .text-white *,
@@ -284,17 +307,19 @@ async def build_ui():
         html body .text-neutral-300, 
         html body [class*="text-neutral-300"],
         html body .text-neutral-300 *,
+        html body .text-neutral-400.uppercase,
+        html body [class*="text-neutral-400"].uppercase,
         html body .text-5xl,
         html body .text-5xl * { 
             color: #ebdcd0 !important; 
         }
-        /* Alvo das Labels Secundárias Desaturadas Apagadas (Pace, Statistics, Timer, etc.) */
+        /* Muted Static Labels Group: Pace, Weekly Goal, etc. */
         html body .text-neutral-500, 
         html body [class*="text-neutral-500"],
         html body .text-neutral-500 *,
-        html body .text-neutral-400,
-        html body [class*="text-neutral-400"],
-        html body .text-neutral-400 * { 
+        html body .text-neutral-400:not(.uppercase),
+        html body [class*="text-neutral-400"]:not(.uppercase),
+        html body .text-neutral-400:not(.uppercase) * { 
             color: #59514a !important; 
         }
         .text-neutral-600 { color: #382d26 !important; }
@@ -314,7 +339,7 @@ async def build_ui():
 
     def open_settings_panel():
         with ui.dialog() as dialog, ui.card().classes('w-80 rounded-none p-4 mono-card'):
-            ui.label('Configuration').classes('text-xs text-white uppercase tracking-wider mb-4 w-full')
+            ui.label('Configuration').classes('text-xs frappe-light uppercase tracking-wider mb-4 w-full')
             
             pomo_input = ui.number('Focus Period (min)', value=settings.get_pomodoro_minutes(), format='%.0f').classes('w-full mb-2')
             break_input = ui.number('Break Period (min)', value=settings.get_break_minutes(), format='%.0f').classes('w-full mb-2')
@@ -323,8 +348,8 @@ async def build_ui():
             
             def confirm_reset():
                 with ui.dialog() as confirm_dialog, ui.card().classes('w-72 rounded-none p-4 mono-card'):
-                    ui.label('Are you sure?').classes('text-xs text-white uppercase tracking-wider mb-1')
-                    ui.label('This will permanently delete all logged focus sessions.').classes('text-xs text-neutral-500 mb-4')
+                    ui.label('Are you sure?').classes('text-xs frappe-light uppercase tracking-wider mb-1')
+                    ui.label('This will permanently delete all logged focus sessions.').classes('text-xs frappe-dark mb-4')
                     with ui.row().classes('w-full justify-end gap-2'):
                         ui.button('Cancel', on_click=confirm_dialog.close).classes('mono-btn text-xs')
                         async def perform_reset():
@@ -364,7 +389,7 @@ async def build_ui():
 
     async def open_suggestions_panel():
         with ui.dialog() as dialog, ui.card().classes('w-[360px] rounded-none p-4 mono-card'):
-            ui.label('Edit Suggestions').classes('text-xs text-white uppercase tracking-wider mb-3')
+            ui.label('Edit Suggestions').classes('text-xs frappe-light uppercase tracking-wider mb-3')
             
             with ui.row().classes('w-full items-center gap-1 mb-3 pb-3 mono-divider'):
                 new_name = ui.input(placeholder='Activity name').classes('w-36').props('dense dark')
@@ -406,7 +431,7 @@ async def build_ui():
                 
                 with subject_list_container:
                     if not all_items:
-                        ui.label('[No items defined]').classes('text-xs text-neutral-600 italic')
+                        ui.label('[No items defined]').classes('text-xs frappe-muted italic')
                     
                     for sub in all_items:
                         with ui.row().classes('w-full items-center justify-between gap-1 p-1 bg-neutral-950 mono-divider'):
@@ -424,13 +449,13 @@ async def build_ui():
 
     def open_help_panel():
         with ui.dialog() as dialog, ui.card().classes('w-[420px] rounded-none p-4 mono-card'):
-            ui.label('Information').classes('text-xs text-white uppercase tracking-wider mb-3 w-full pb-1 mono-divider')
+            ui.label('Information').classes('text-xs frappe-light uppercase tracking-wider mb-3 w-full pb-1 mono-divider')
             
-            ui.label('CaFE features two main operating modes: a Pomodoro loop that automatically alternates between Focus and Break intervals, and a Stopwatch.').classes('text-xs text-neutral-400 mb-3 leading-relaxed')
-            ui.label('During Pomodoro rest states, a contextual "Skip Break »" shortcut becomes available at the bottom right.').classes('text-xs text-neutral-400 mb-3 leading-relaxed')
-            ui.label('A daily study suggestion is generated using a weighted, non-repeating random selection from your subject pool. This selection rotates exclusively on your first app launch of a new calendar day, protecting active midnight sessions from sudden shifts.').classes('text-xs text-neutral-400 mb-3 leading-relaxed')
+            ui.label('CaFE features two main operating modes: a Pomodoro loop that automatically alternates between Focus and Break intervals, and a Stopwatch.').classes('text-xs frappe-dark mb-3 leading-relaxed')
+            ui.label('During Pomodoro rest states, a contextual "Skip Break »" shortcut becomes available at the bottom right.').classes('text-xs frappe-dark mb-3 leading-relaxed')
+            ui.label('A daily study suggestion is generated using a weighted, non-repeating random selection from your subject pool. This selection rotates exclusively on your first app launch of a new calendar day, protecting active midnight sessions from sudden shifts.').classes('text-xs frappe-dark mb-3 leading-relaxed')
                         
-            with ui.column().classes('w-full pt-2.5 mt-1 gap-1 text-[11px] text-neutral-500').style('border-top: 1px solid #141414;'):
+            with ui.column().classes('w-full pt-2.5 mt-1 gap-1 text-[11px] frappe-dark').style('border-top: 1px solid #141414;'):
                 with ui.row().classes('items-center gap-2 hover:text-white transition-colors cursor-pointer').on('click', lambda: ui.navigate.to('https://github.com/j46-txt/CaFE', new_tab=True)):
                     ui.html('''<svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>''')
                     ui.label('github.com/j46-txt/CaFE')
@@ -462,27 +487,27 @@ async def build_ui():
 
         with ui.dialog() as dialog, ui.card().classes('w-[480px] rounded-none p-4 mono-card'):
             with ui.row().classes('w-full justify-between items-center mb-3 pb-1 mono-divider'):
-                ui.label('Focus Sessions Log').classes('text-xs text-white uppercase tracking-wider')
+                ui.label('Focus Sessions Log').classes('text-xs frappe-light uppercase tracking-wider')
                 ui.button('Export CSV', on_click=download_csv_log).classes('mono-btn').style('font-size: 10px !important; padding: 2px 8px !important; height: auto; min-height: 0;')
             
             if summary_rows:
-                ui.label('Weekly Activity Blueprint:').classes('text-[11px] text-neutral-500 uppercase mb-1')
+                ui.label('Weekly Activity Blueprint:').classes('text-[11px] frappe-dark uppercase mb-1')
                 with ui.column().classes('w-full gap-0.5 mb-4 p-2 bg-neutral-950 text-[11px] mono-card'):
                     for s_row in reversed(summary_rows):
                         hours = s_row['total_sec'] / 3600
                         bars = '■' * min(10, max(1, int(hours * 2)))
-                        ui.label(f"{s_row['start_date'][-5:]} | {bars:<10} ({hours:.1f}h)").classes('text-neutral-400')
+                        ui.label(f"{s_row['start_date'][-5:]} | {bars:<10} ({hours:.1f}h)").classes('frappe-dark')
 
             log_container = ui.column().classes('w-full gap-1 max-h-48 overflow-y-auto mb-4 text-xs text-neutral-400')
             
             with log_container:
                 if not rows:
-                    ui.label('[No sessions recorded yet]').classes('text-xs text-neutral-600 italic')
+                    ui.label('[No sessions recorded yet]').classes('text-xs frappe-muted italic')
                 else:
                     with ui.row().classes('w-full justify-between mono-divider pb-1 text-neutral-500 text-[11px]'):
-                        ui.label('Day (Date | Weekday)').classes('w-36')
-                        ui.label('Suggestion Studied').classes('w-24')
-                        ui.label('Time').classes('w-16 text-right')
+                        ui.label('Day (Date | Weekday)').classes('w-36 frappe-dark')
+                        ui.label('Suggestion Studied').classes('w-24 frappe-dark')
+                        ui.label('Time').classes('w-16 text-right frappe-dark')
                     
                     for row in rows:
                         duration_str = statistics.format_duration(row['duration_seconds'])
@@ -495,9 +520,9 @@ async def build_ui():
                             day_name = '???'
                             
                         with ui.row().classes('w-full justify-between py-1 border-b border-neutral-950 text-[11px]'):
-                            ui.label(f"{row['start_date']} ({day_name})").classes('w-36 text-neutral-400')
-                            ui.label(sub_name).classes('w-24 truncate text-neutral-300')
-                            ui.label(duration_str).classes('w-16 text-right text-white')
+                            ui.label(f"{row['start_date']} ({day_name})").classes('w-36 frappe-dark')
+                            ui.label(sub_name).classes('w-24 truncate frappe-light')
+                            ui.label(duration_str).classes('w-16 text-right frappe-light')
                             
             ui.button('Close Log', on_click=dialog.close).classes('w-full mono-btn text-xs')
         dialog.open()
@@ -621,17 +646,17 @@ async def build_ui():
 
     with ui.column().classes('w-full max-w-4xl mx-auto p-4 gap-4').style('background-color: #000000;'):
         
-        clock_label = ui.label('').classes('text-neutral-500 tracking-wider text-xs pl-1')
+        clock_label = ui.label('').classes('frappe-dark tracking-wider text-xs pl-1')
         
         with ui.column().classes('w-full gap-4 p-4 mono-card'):
             
             with ui.row().classes('w-full justify-between items-start text-sm'):
                 with ui.column().classes('gap-1'):
-                    greeting_label = ui.label('').classes('text-neutral-300')
+                    greeting_label = ui.label('').classes('frappe-light')
                     
                     with ui.row().classes('items-center gap-1.5').style('height: 28px; max-height: 28px;'):
-                        ui.label("Today's suggestion:").classes('text-neutral-500 text-sm')
-                        suggestion_val_label = ui.label('').classes('text-white uppercase text-sm')
+                        ui.label("Today's suggestion:").classes('frappe-dark text-sm')
+                        suggestion_val_label = ui.label('').classes('frappe-light uppercase text-sm')
                         edit_suggestion_inline_btn = ui.button(icon='edit', on_click=open_suggestions_panel).props('flat dense size=xs color=grey').style('margin-top: -2px; padding: 0; width: 12px; min-width: 12px;')
                         add_suggestion_inline_btn = ui.button('+ Define Suggestions', on_click=open_suggestions_panel).classes('inline-mono-btn')
                 
@@ -641,8 +666,8 @@ async def build_ui():
 
             with ui.column().classes('w-full gap-1.5 mt-2'):
                 with ui.row().classes('w-full justify-between items-baseline'):
-                    ui.label('Weekly Goal').classes('text-xs uppercase tracking-wider text-neutral-500')
-                    week_label = ui.label('0h 0m / 10h').classes('text-white text-sm')
+                    ui.label('Weekly Goal').classes('text-xs uppercase tracking-wider frappe-dark')
+                    week_label = ui.label('0h 0m / 10h').classes('frappe-light text-sm')
                 
                 week_progress = ui.linear_progress(value=0.0, show_value=False).classes('w-full').style('height: 14px !important; border-radius: 0px;')
 
@@ -650,26 +675,26 @@ async def build_ui():
             
             with ui.column().classes('p-4 gap-4 relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
                 with ui.row().classes('w-full justify-between items-center pb-2 mono-divider'):
-                    ui.label('Statistics').classes('text-sm uppercase tracking-wider text-neutral-400')
+                    ui.label('Statistics').classes('text-sm uppercase tracking-wider frappe-light')
                 
                 with ui.column().classes('w-full gap-3 text-sm text-neutral-400'):
                     with ui.column().classes('gap-0'):
-                        ui.label('Pace').classes('text-sm uppercase tracking-wider text-neutral-500')
-                        avg_label = ui.label('0.0 hours/week').classes('text-white text-base')
+                        ui.label('Pace').classes('text-sm uppercase tracking-wider frappe-dark')
+                        avg_label = ui.label('0.0 hours/week').classes('frappe-light text-base')
                         
                     with ui.column().classes('gap-0'):
-                        ui.label('Total Hours').classes('text-sm uppercase tracking-wider text-neutral-500')
-                        total_label = ui.label('0h 0m').classes('text-white text-base')
+                        ui.label('Total Hours').classes('text-sm uppercase tracking-wider frappe-dark')
+                        total_label = ui.label('0h 0m').classes('frappe-light text-base')
 
                     with ui.column().classes('gap-0'):
-                        ui.label('Total Focus Days').classes('text-sm uppercase tracking-wider text-neutral-500')
-                        focus_days_label = ui.label('0 days').classes('text-white text-base')
+                        ui.label('Total Focus Days').classes('text-sm uppercase tracking-wider frappe-dark')
+                        focus_days_label = ui.label('0 days').classes('frappe-light text-base')
                 
                 ui.label('Show More »').on('click', open_history_panel).classes('absolute bottom-4 left-4 cursor-pointer text-xs uppercase tracking-wider transition-colors blue-link')
 
             with ui.column().classes('p-4 gap-4 items-center justify-start relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
                 with ui.row().classes('w-full items-center pb-2 relative').style('height: 32px; min-height: 32px; max-height: 32px; border-bottom: 1px solid #141414;'):
-                    ui.label('Timer').classes('text-sm uppercase tracking-wider text-neutral-400')
+                    ui.label('Timer').classes('text-sm uppercase tracking-wider frappe-light')
                     with ui.row().classes('absolute right-0 top-0 bottom-2 items-center'):
                         timer_status_label = ui.label('[Focus]').classes('rounded-none font-mono')
                 
@@ -680,18 +705,18 @@ async def build_ui():
                 ).classes('large-toggle mt-1').props('dense unevaluated flat')
                 
                 with ui.column().classes('w-full items-center mt-1'):
-                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl text-white mb-3 tracking-normal')
+                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl frappe-light mb-3 tracking-normal')
                     
                     with ui.row().classes('gap-4 h-10 items-center justify-center w-full'):
-                        start_pause_btn = ui.button(on_click=toggle_start_pause).classes('mono-btn').props('flat round size=md')
-                        reset_btn = ui.button(on_click=lambda: (focus_timer.reset(), update_display())).classes('mono-btn').props('flat round icon=refresh size=md')
-                        stop_btn = ui.button(on_click=lambda: (focus_timer.stop(), update_display())).classes('mono-btn').props('flat round icon=stop size=md')
+                        start_pause_btn = ui.button(on_click=toggle_start_pause).classes('mono-btn').props('flat round size=lg')
+                        reset_btn = ui.button(on_click=lambda: (focus_timer.reset(), update_display())).classes('mono-btn').props('flat round icon=refresh size=lg')
+                        stop_btn = ui.button(on_click=lambda: (focus_timer.stop(), update_display())).classes('mono-btn').props('flat round icon=stop size=lg')
 
                 with ui.row().classes('w-full items-center gap-1.5 mt-auto pt-2').style('border-top: 1px solid #141414;'):
-                    ui.label("Today:").classes('text-xs uppercase tracking-wider text-neutral-500')
-                    today_label = ui.label('0h 0m').classes('text-xs text-neutral-300')
+                    ui.label("Today:").classes('text-xs uppercase tracking-wider frappe-dark')
+                    today_label = ui.label('0h 0m').classes('text-xs frappe-light')
 
-                skip_btn = ui.label('Skip Break »').on('click', lambda: (focus_timer.skip(), update_display())).classes('absolute bottom-2 right-4 cursor-pointer text-xs text-neutral-600 hover:text-white uppercase tracking-wider transition-colors')
+                skip_btn = ui.label('Skip Break »').on('click', lambda: (focus_timer.skip(), update_display())).classes('absolute bottom-2 right-4 cursor-pointer text-xs uppercase tracking-wider transition-colors skip-btn-custom')
 
     update_clock()
     update_display()
