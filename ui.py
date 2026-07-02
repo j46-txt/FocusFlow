@@ -116,16 +116,18 @@ async def build_ui():
         .frappe-light { color: #ebdcd0 !important; }
         .frappe-dark { color: #59514a !important; }
         .frappe-muted { color: #382d26 !important; }
-        .clock-text { color: #59514a !important; }
         
-        /* ABSOLUTE DISABLE OF ALL RECTANGULAR HOVER/FOCUS BOXES AND TRANSITION OVERLAYS GLOBALLY */
+        /* RADICAL RECTANGULAR HOVER REMOVAL FOR ALL COMPONENT STATES (INCLUDING ACTIVE/POST-CLICK) */
         html body .q-focus-helper,
         html body .q-btn .q-focus-helper,
-        html body .q-btn::before {
+        html body .q-btn::before,
+        html body .q-btn::after {
             display: none !important;
             opacity: 0 !important;
             background: transparent !important;
+            background-color: transparent !important;
             box-shadow: none !important;
+            content: none !important;
         }
         
         /* STANDARD RECTANGULAR BUTTONS */
@@ -146,8 +148,11 @@ async def build_ui():
             border-color: #382d26 !important;
         }
         
-        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - RECTANGLE ELIMINATED AT ALL TIMES */
-        html body .q-btn.mono-btn.q-btn--round {
+        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - ABSOLUTELY BORDERLESS ICON HOVER */
+        html body .q-btn.mono-btn.q-btn--round,
+        html body .q-btn.mono-btn.q-btn--round:hover,
+        html body .q-btn.mono-btn.q-btn--round:focus,
+        html body .q-btn.mono-btn.q-btn--round:active {
             background-color: transparent !important;
             background: transparent !important;
             border: none !important;
@@ -158,16 +163,9 @@ async def build_ui():
             color: #4e3629 !important;
             font-size: 38px !important;
         }
-        html body .q-btn.mono-btn.q-btn--round:hover,
-        html body .q-btn.mono-btn.q-btn--round:focus,
-        html body .q-btn.mono-btn.q-btn--round:active {
-            background-color: transparent !important;
-            background: transparent !important;
-            box-shadow: none !important;
-        }
         html body .q-btn.mono-btn.q-btn--round:hover .q-icon,
         html body .q-btn.mono-btn.q-btn--round:hover .q-btn__content {
-            color: #875d46 !important; /* Unified standardized brown hover */
+            color: #875d46 !important; /* Unified brown hover */
         }
         
         .inline-mono-btn {
@@ -207,7 +205,7 @@ async def build_ui():
             color: #875d46 !important;
         }
         
-        /* SERVER-LATENCY RESISTANT MODE TOGGLE RIGID RULES */
+        /* LATENCY-PROOFED DUAL ALTERNATING TOGGLE RULES */
         html body .large-toggle .q-btn {
             font-size: 13px !important;
             padding: 3px 10px !important;
@@ -215,7 +213,7 @@ async def build_ui():
             box-shadow: none !important;
             transition: none !important;
         }
-        /* Lock Unselected State Robustly */
+        /* Rigid Inactive Locked State */
         html body .large-toggle .q-btn:not(.q-btn--active),
         html body .large-toggle .q-btn:not(.q-btn--active):hover,
         html body .large-toggle .q-btn:not(.q-btn--active):focus,
@@ -227,7 +225,7 @@ async def build_ui():
         html body .large-toggle .q-btn:not(.q-btn--active) .q-btn__content {
             color: #4a413a !important;
         }
-        /* Lock Selected State Robustly */
+        /* Rigid Active Locked State */
         html body .large-toggle .q-btn.q-btn--active,
         html body .large-toggle .q-btn.q-btn--active:hover,
         html body .large-toggle .q-btn.q-btn--active:focus,
@@ -240,18 +238,23 @@ async def build_ui():
             color: #ebdcd0 !important;
         }
         
-        /* FLAT ICON INTERACTIVE BUTTONS (Help and Settings) - REMOVES CLICK RECTANGLE */
-        .q-btn.text-grey, .q-btn.text-grey .q-icon {
-            color: #59514a !important;
-        }
-        .q-btn.text-grey:hover, .q-btn.text-grey:hover .q-icon,
-        .q-btn.text-grey:focus, .q-btn.text-grey:active {
-            color: #ebdcd0 !important;
+        /* FLAT ICON INTERACTIVE BUTTONS (Help and Settings) - RECTANGLE OVERLAY TERMINATED */
+        html body .q-btn.text-grey, html body .q-btn.text-grey .q-icon,
+        html body .q-btn.text-grey:hover, html body .q-btn.text-grey:focus, html body .q-btn.text-grey:active {
             background-color: transparent !important;
             background: transparent !important;
+            box-shadow: none !important;
+        }
+        html body .q-btn.text-grey .q-icon {
+            color: #59514a !important;
+        }
+        html body .q-btn.text-grey:hover .q-icon,
+        html body .q-btn.text-grey:focus .q-icon,
+        html body .q-btn.text-grey:active .q-icon {
+            color: #ebdcd0 !important;
         }
         
-        /* DIALOG FORM LABELS AND SELECTORS CONFIGURATION OVERRIDE */
+        /* DIALOG FORM CONFIGURATION CORES OVERRIDE */
         html body .q-dialog .q-field__label,
         html body .q-dialog .q-field__native,
         html body .q-dialog .q-field__input,
@@ -269,7 +272,7 @@ async def build_ui():
             color: #59514a !important;
         }
         
-        /* PROGRESS BAR: HOLLOW CONTEXT WITH DARK UNIFIED BROWN BORDER */
+        /* PROGRESS BAR: HOLLOW CONTEXT WITH DARK BORDER */
         html body .q-linear-progress { 
             background-color: #000000 !important; 
             background: #000000 !important;
@@ -301,14 +304,15 @@ async def build_ui():
             color: #ebdcd0 !important;
         }
 
-        /* ANCHORED OVERRIDES TO SUBDUE ALL NATIVE STYLES WITH ABSOLUTE CERTAINTY */
-        /* Core High Visibility Group: Greeting, Timer, Numbers, Active Suggestion, Panel Card Titles */
+        /* ANCHORED OVERRIDES FOR METRICS AND HEADERS */
+        /* High Visibility Group: Greeting, Timer Value, Card Metric Values, Active Suggestion, Card Titles */
         html body .text-white, 
         html body [class*="text-white"],
         html body .text-neutral-300, 
         html body [class*="text-neutral-300"],
         html body .text-neutral-400.uppercase,
         html body [class*="text-neutral-400"].uppercase,
+        html body .text-base,
         html body .text-5xl { 
             color: #ebdcd0 !important; 
         }
@@ -565,7 +569,7 @@ async def build_ui():
             mode_label = 'Stopwatch'
 
         timer_label.text = focus_timer.display_time
-        ui.page_title(f"{focus_timer.display_time} · {mode_label}︎")
+        ui.page_title(f"({focus_timer.display_time}) {mode_label}")
 
         skip_btn.set_visibility(is_break)
         reset_btn.set_visibility(is_pomo_mode and status != 'idle')
@@ -642,7 +646,7 @@ async def build_ui():
 
     with ui.column().classes('w-full max-w-4xl mx-auto p-4 gap-4').style('background-color: #000000;'):
         
-        clock_label = ui.label('').classes('clock-text tracking-wider text-xs pl-1')
+        clock_label = ui.label('').classes('tracking-wider text-xs pl-1').style('color: #59514a !important;')
         
         with ui.column().classes('w-full gap-4 p-4 mono-card'):
             
@@ -676,15 +680,15 @@ async def build_ui():
                 with ui.column().classes('w-full gap-3 text-sm text-neutral-400'):
                     with ui.column().classes('gap-0'):
                         ui.label('Pace').classes('text-sm uppercase tracking-wider frappe-dark')
-                        avg_label = ui.label('0.0 hours/week').classes('frappe-light text-base')
+                        avg_label = ui.label('0.0 hours/week').classes('text-white text-base')
                         
                     with ui.column().classes('gap-0'):
                         ui.label('Total Hours').classes('text-sm uppercase tracking-wider frappe-dark')
-                        total_label = ui.label('0h 0m').classes('frappe-light text-base')
+                        total_label = ui.label('0h 0m').classes('text-white text-base')
 
                     with ui.column().classes('gap-0'):
                         ui.label('Total Focus Days').classes('text-sm uppercase tracking-wider frappe-dark')
-                        focus_days_label = ui.label('0 days').classes('frappe-light text-base')
+                        focus_days_label = ui.label('0 days').classes('text-white text-base')
                 
                 ui.label('Show More »').on('click', open_history_panel).classes('absolute bottom-4 left-4 cursor-pointer text-xs uppercase tracking-wider transition-colors blue-link')
 
@@ -701,7 +705,7 @@ async def build_ui():
                 ).classes('large-toggle mt-1').props('dense unevaluated flat')
                 
                 with ui.column().classes('w-full items-center mt-1'):
-                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl frappe-light tracking-normal').style('transform: translateY(3px);')
+                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl frappe-light tracking-normal').style('transform: translateY(1px);')
                     
                     with ui.row().classes('gap-1.5 h-10 items-center justify-center w-full'):
                         start_pause_btn = ui.button(on_click=toggle_start_pause).classes('mono-btn').props('flat round size=lg')
