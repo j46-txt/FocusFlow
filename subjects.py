@@ -15,6 +15,7 @@ class Subject:
     is_active: bool
     list_order: int
     weight: int = 1
+    is_deleted: int = 0
 
 # Explicit serialization primitive to secure timezone evaluations across asynchronous user request sessions
 rotation_lock = threading.Lock()
@@ -25,7 +26,7 @@ def seed_default_subjects() -> None:
 
 def get_all_subjects() -> List[Subject]:
     with database.get_db() as db:
-        rows = db.execute('SELECT * FROM subjects ORDER BY list_order ASC').fetchall()
+        rows = db.execute('SELECT * FROM subjects WHERE is_deleted = 0 ORDER BY list_order ASC').fetchall()
         return [Subject(**dict(row)) for row in rows]
 
 def add_subject(name: str, weight: int = 1) -> None:
@@ -35,12 +36,12 @@ def add_subject(name: str, weight: int = 1) -> None:
         max_order = db.execute('SELECT MAX(list_order) as max_ord FROM subjects').fetchone()['max_ord']
         new_order = 0 if max_order is None else max_order + 1
         db.execute(
-            'INSERT INTO subjects (name, is_active, list_order, weight) VALUES (?, ?, ?, ?)',
+            'INSERT INTO subjects (name, is_active, list_order, weight, is_deleted) VALUES (?, ?, ?, ?, 0)',
             (name.strip(), 0, new_order, max(1, weight))
         )
-        count = db.execute('SELECT COUNT(*) as count FROM subjects').fetchone()['count']
+        count = db.execute('SELECT COUNT(*) as count FROM subjects WHERE is_deleted = 0').fetchone()['count']
         if count == 1:
-            db.execute('UPDATE subjects SET is_active = 1 WHERE name = ?', (name.strip(),))
+            db.execute('UPDATE subjects SET is_active = 1 WHERE name = ? AND is_deleted = 0', (name.strip(),))
 
 def update_subject(subject_id: int, name: str, weight: int) -> None:
     if not name.strip():
@@ -51,9 +52,9 @@ def update_subject(subject_id: int, name: str, weight: int) -> None:
 def delete_subject(subject_id: int) -> None:
     with database.get_db() as db:
         current = db.execute('SELECT is_active FROM subjects WHERE id = ?', (subject_id,)).fetchone()
-        db.execute('DELETE FROM subjects WHERE id = ?', (subject_id,))
+        db.execute('UPDATE subjects SET is_deleted = 1, is_active = 0 WHERE id = ?', (subject_id,))
         if current and current['is_active']:
-            fallback = db.execute('SELECT id FROM subjects ORDER BY list_order ASC LIMIT 1').fetchone()
+            fallback = db.execute('SELECT id FROM subjects WHERE is_deleted = 0 ORDER BY list_order ASC LIMIT 1').fetchone()
             if fallback:
                 db.execute('UPDATE subjects SET is_active = 1 WHERE id = ?', (fallback['id'],))
 
@@ -64,10 +65,10 @@ def set_active_subject(subject_id: int) -> None:
 
 def get_active_subject() -> Optional[Subject]:
     with database.get_db() as db:
-        row = db.execute('SELECT * FROM subjects WHERE is_active = 1 LIMIT 1').fetchone()
+        row = db.execute('SELECT * FROM subjects WHERE is_active = 1 AND is_deleted = 0 LIMIT 1').fetchone()
         if row:
             return Subject(**dict(row))
-        row = db.execute('SELECT * FROM subjects ORDER BY list_order ASC LIMIT 1').fetchone()
+        row = db.execute('SELECT * FROM subjects WHERE is_deleted = 0 ORDER BY list_order ASC LIMIT 1').fetchone()
         if row:
             db.execute('UPDATE subjects SET is_active = 1 WHERE id = ?', (row['id'],))
             return Subject(**dict(row))
@@ -76,13 +77,13 @@ def get_active_subject() -> Optional[Subject]:
 def rotate_subject() -> None:
     """Performs a non-repeating weighted random shuffle selection."""
     with database.get_db() as db:
-        all_subs = db.execute('SELECT * FROM subjects').fetchall()
+        all_subs = db.execute('SELECT * FROM subjects WHERE is_deleted = 0').fetchall()
         if not all_subs:
             return
         if len(all_subs) == 1:
             db.execute('UPDATE subjects SET is_active = 1 WHERE id = ?', (all_subs[0]['id'],))
             return
-        current = db.execute('SELECT * FROM subjects WHERE is_active = 1 LIMIT 1').fetchone()
+        current = db.execute('SELECT * FROM subjects WHERE is_active = 1 AND is_deleted = 0 LIMIT 1').fetchone()
         candidates = [s for s in all_subs if not current or s['id'] != current['id']]
         if not candidates:
             candidates = list(all_subs)
