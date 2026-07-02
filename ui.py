@@ -73,7 +73,7 @@ async def build_ui():
     """Builds the main user interface layout asynchronously without event loop stalls."""
     global active_clients
 
-    ui.colors(primary='#6f4e37', positive='#a3b18a')
+    ui.colors(primary='#4e3629', positive='#a3b18a')
     
     client = ui.context.client
     active_clients.add(client)
@@ -113,6 +113,7 @@ async def build_ui():
             border-bottom: 1px solid #16100d !important;
         }
         
+        /* BOTÕES RETANGULARES PADRÃO */
         .mono-btn {
             background-color: #000000 !important;
             border: 1px solid #16100d !important;
@@ -130,9 +131,22 @@ async def build_ui():
             border-color: #382d26 !important;
         }
         
-        .inline-mono-btn {
+        /* BOTÕES DE CONTROLE DO TIMER (START, PAUSE, RESTART) */
+        html body .q-btn.mono-btn.q-btn--round {
+            background-color: #4e3629 !important;
+            border: 1px solid #4e3629 !important;
+            color: #ebdcd0 !important;
+            box-shadow: none !important;
+        }
+        html body .q-btn.mono-btn.q-btn--round:hover {
             background-color: #6f4e37 !important;
-            border: 1px solid #6f4e37 !important;
+            border-color: #6f4e37 !important;
+            color: #ffffff !important;
+        }
+        
+        .inline-mono-btn {
+            background-color: #4e3629 !important;
+            border: 1px solid #4e3629 !important;
             color: #ebdcd0 !important;
             text-transform: uppercase !important;
             border-radius: 2px !important;
@@ -155,9 +169,9 @@ async def build_ui():
         }
         
         .inline-mono-btn:hover {
-            background-color: #543d2b !important;
-            border-color: #543d2b !important;
-            color: #ebdcd0 !important;
+            background-color: #6f4e37 !important;
+            border-color: #6f4e37 !important;
+            color: #ffffff !important;
         }
         
         .blue-link {
@@ -168,8 +182,8 @@ async def build_ui():
             color: #7d5337 !important;
         }
         
-        /* SELETOR TOGGLE (Pomodoro / Stopwatch) - CORREÇÃO COMPLETA DE CLIQUE */
-        .large-toggle .q-btn {
+        /* TRAVAMENTO RADICAL DO SELETOR POMODORO / STOPWATCH */
+        html body .large-toggle .q-btn {
             font-size: 13px !important;
             padding: 3px 10px !important;
             border-radius: 0px !important;
@@ -179,23 +193,26 @@ async def build_ui():
             transition: none !important;
             box-shadow: none !important;
         }
-        .large-toggle .q-btn.q-btn--active {
+        html body .large-toggle .q-btn.q-btn--active {
             color: #ebdcd0 !important; 
-            background-color: #6f4e37 !important;
-            border-color: #6f4e37 !important;
+            background-color: #4e3629 !important;
+            border-color: #4e3629 !important;
         }
-        .large-toggle .q-btn .q-focus-helper, .large-toggle .q-btn .q-ripple {
+        html body .large-toggle .q-btn .q-focus-helper, 
+        html body .large-toggle .q-btn .q-ripple {
             display: none !important;
+            opacity: 0 !important;
         }
-        /* Estabiliza as cores durantes cliques contínuos e segurados (Evita o efeito de piscar) */
-        .large-toggle .q-btn:not(.q-btn--active):active, 
-        .large-toggle .q-btn:not(.q-btn--active):focus {
+        html body .large-toggle .q-btn:not(.q-btn--active):active, 
+        html body .large-toggle .q-btn:not(.q-btn--active):focus,
+        html body .large-toggle .q-btn:not(.q-btn--active):hover {
             background-color: #000000 !important;
             color: #4a413a !important;
         }
-        .large-toggle .q-btn.q-btn--active:active, 
-        .large-toggle .q-btn.q-btn--active:focus {
-            background-color: #6f4e37 !important;
+        html body .large-toggle .q-btn.q-btn--active:active, 
+        html body .large-toggle .q-btn.q-btn--active:focus,
+        html body .large-toggle .q-btn.q-btn--active:hover {
+            background-color: #4e3629 !important;
             color: #ebdcd0 !important;
         }
         
@@ -213,18 +230,18 @@ async def build_ui():
         }
         .q-field--outlined .q-field__control { border: 1px solid #16100d !important; border-radius: 0px !important; }
         
-        /* BARRA DE PROGRESSO: TOTALMENTE OCA COM CONTORNO MARROM */
-        .q-linear-progress { 
+        /* BARRA DE PROGRESSO: CONTORNO EM MARROM ESCURO */
+        html body .q-linear-progress { 
             background-color: #000000 !important; 
             background: #000000 !important;
             color: #6f4e37 !important; 
-            border: 1px solid #6f4e37 !important;
+            border: 1px solid #4e3629 !important;
         }
-        /* Remove o fundo cinza padrão interno da esteira do componente */
-        .q-linear-progress__track, .q-linear-progress__track--with-background {
+        html body .q-linear-progress__track {
             background-color: #000000 !important;
             background: #000000 !important;
             opacity: 0 !important;
+            display: none !important;
         }
         
         @keyframes gradient-flow-right {
@@ -237,13 +254,18 @@ async def build_ui():
             animation: gradient-flow-right 3s linear infinite !important;
         }
 
-        /* SOBREPOSIÇÃO RADICAL DE ESCOPO PARA CORRIGIR TEXTOS E NÚMEROS DIRETOS */
-        /* Grupo de Destaque Principal: Números, Timer, Valores, Saudação e Títulos dos Cards */
-        body [class*="text-white"], body [class*="text-neutral-300"], body .hover\:text-white:hover { 
+        /* ANULAÇÃO ABSOLUTA DAS CORES BRANCAS E CINZAS DO FRAMEWORK */
+        html body .text-white, 
+        html body [class*="text-white"], 
+        html body .text-neutral-300, 
+        html body [class*="text-neutral-300"],
+        html body .text-5xl { 
             color: #ebdcd0 !important; 
         }
-        /* Grupo de Labels Secundárias Desaturadas e Apagadas */
-        body [class*="text-neutral-500"], body [class*="text-neutral-400"]:not(.uppercase) { 
+        html body .text-neutral-500, 
+        html body [class*="text-neutral-500"],
+        html body .text-neutral-400:not(.uppercase),
+        html body [class*="text-neutral-400"]:not(.uppercase) { 
             color: #59514a !important; 
         }
         .text-neutral-600 { color: #382d26 !important; }
