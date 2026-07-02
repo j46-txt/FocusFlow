@@ -112,10 +112,6 @@ async def build_ui():
             border-bottom: 1px solid #16100d !important;
         }
         
-        .clock-text {
-            color: #59514a !important;
-        }
-        
         /* PROPRIETARY SEMANTIC CLASSES IN ENGLISH */
         .frappe-light { color: #ebdcd0 !important; }
         .frappe-dark { color: #59514a !important; }
@@ -199,6 +195,13 @@ async def build_ui():
         html body .icon-panel-btn:hover .q-icon {
             color: #ebdcd0 !important;
         }
+        html body .icon-panel-btn:focus .q-icon,
+        html body .icon-panel-btn:active .q-icon {
+            color: #59514a !important;
+        }
+        html body .icon-panel-btn:hover:focus .q-icon {
+            color: #ebdcd0 !important;
+        }
         
         .inline-mono-btn {
             background-color: #4e3629 !important;
@@ -237,38 +240,15 @@ async def build_ui():
             color: #875d46 !important;
         }
         
-        /* LATENCY-PROOFED DUAL ALTERNATING TOGGLE RULES */
-        html body .large-toggle .q-btn {
-            font-size: 13px !important;
-            padding: 3px 10px !important;
-            border-radius: 0px !important;
-            box-shadow: none !important;
-            transition: none !important;
+        /* DIALOG CONFIGURATION CORES - SEPARATED LABEL AND INPUT VALUE COLORS */
+        html body .q-dialog .q-field__label {
+            color: #59514a !important; /* Labels escuros em tom passivo */
         }
-        /* Rigid Inactive Locked State (including disabled) */
-        html body .large-toggle .q-btn:not(.q-btn--active),
-        html body .large-toggle .q-btn.disabled:not(.q-btn--active) {
-            background-color: #000000 !important;
-            background: #000000 !important;
-            border: 1px solid #16100d !important;
-            opacity: 1 !important;
-        }
-        /* Rigid Active Locked State (including disabled) */
-        html body .large-toggle .q-btn.q-btn--active,
-        html body .large-toggle .q-btn.q-btn--active.disabled {
-            background-color: #4e3629 !important;
-            background: #4e3629 !important;
-            border: 1px solid #4e3629 !important;
-            opacity: 1 !important;
-        }
-        
-        /* DIALOG FORM CONFIGURATION CORES OVERRIDE */
-        html body .q-dialog .q-field__label,
         html body .q-dialog .q-field__native,
         html body .q-dialog .q-field__input,
         html body .q-dialog .q-field__prefix,
         html body .q-dialog .q-field__suffix {
-            color: #ebdcd0 !important;
+            color: #ebdcd0 !important; /* Números e valores customizados claros */
         }
         html body .q-dialog .q-field--outlined .q-field__control {
             border: 1px solid #16100d !important;
@@ -313,7 +293,6 @@ async def build_ui():
         }
 
         /* ANCHORED OVERRIDES FOR METRICS AND HEADERS */
-        /* High Visibility Group: Greeting, Timer Value, Card Metric Values, Active Suggestion, Card Titles */
         html body .text-white, 
         html body [class*="text-white"],
         html body .text-neutral-300, 
@@ -324,7 +303,6 @@ async def build_ui():
         html body .text-5xl { 
             color: #ebdcd0 !important; 
         }
-        /* Muted Passive Structural Label Group: Pace, Weekly Goal, Total Hours, Total Focus Days etc. */
         html body .text-neutral-500, 
         html body [class*="text-neutral-500"],
         html body .text-neutral-400:not(.uppercase),
@@ -334,13 +312,38 @@ async def build_ui():
         .text-neutral-600 { color: #382d26 !important; }
         .bg-neutral-950 { background-color: #000000 !important; }
         .border-neutral-950 { border-color: #16100d !important; }
-        
-        /* ANCHORED OVERRIDES FOR LATENCY LOCKS (Força as cores corretas nos botões do toggle independente do delay) */
-        html body .large-toggle .q-btn:not(.q-btn--active) * {
+
+        /* LATENCY-PROOFED DUAL ALTERNATING TOGGLE RULES WITH HARD ENFORCEMENT */
+        html body .large-toggle .q-btn {
+            font-size: 13px !important;
+            padding: 3px 10px !important;
+            border-radius: 0px !important;
+            box-shadow: none !important;
+            transition: none !important;
+        }
+        /* Inactive State Core & Contents (Including Disabled) */
+        html body .large-toggle .q-btn:not(.q-btn--active),
+        html body .large-toggle .q-btn.disabled:not(.q-btn--active) {
+            background-color: #000000 !important;
+            background: #000000 !important;
+            border: 1px solid #16100d !important;
+            opacity: 1 !important;
+        }
+        html body .large-toggle .q-btn:not(.q-btn--active) *,
+        html body .large-toggle .q-btn.disabled:not(.q-btn--active) * {
             color: #4a413a !important;
             opacity: 1 !important;
         }
-        html body .large-toggle .q-btn.q-btn--active * {
+        /* Active State Core & Contents (Including Disabled) */
+        html body .large-toggle .q-btn.q-btn--active,
+        html body .large-toggle .q-btn.disabled.q-btn--active {
+            background-color: #4e3629 !important;
+            background: #4e3629 !important;
+            border: 1px solid #4e3629 !important;
+            opacity: 1 !important;
+        }
+        html body .large-toggle .q-btn.q-btn--active *,
+        html body .large-toggle .q-btn.disabled.q-btn--active * {
             color: #ebdcd0 !important;
             opacity: 1 !important;
         }
@@ -475,7 +478,7 @@ async def build_ui():
                         
             with ui.column().classes('w-full pt-2.5 mt-1 gap-1 text-[11px] frappe-dark').style('border-top: 1px solid #141414;'):
                 with ui.row().classes('items-center gap-2 hover:text-white transition-colors cursor-pointer').on('click', lambda: ui.navigate.to('https://github.com/j46-txt/CaFE', new_tab=True)):
-                    ui.html('''<svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>''')
+                    ui.html('''<svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2;3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>''')
                     ui.label('github.com/j46-txt/CaFE')
             
             ui.button('Close Info', on_click=dialog.close).classes('w-full mono-btn mt-4 text-xs')
@@ -655,7 +658,11 @@ async def build_ui():
     
     def update_clock():
         now = datetime.datetime.now()
-        clock_label.text = now.strftime('%d/%m/%Y | %A | %H:%M')
+        date_str = now.strftime('%d/%m/%Y')
+        day_str = now.strftime('%A')
+        time_str = now.strftime('%H:%M')
+        # Blinda o texto completo em HTML puro garantindo cor igual e imutável para todos os caracteres
+        clock_label.content = f'<span style="color: #59514a; font-size: 12px; tracking-content: wider;">{date_str} | {day_str} | {time_str}</span>'
         greeting_label.text = get_greeting()
         update_display()
 
@@ -663,7 +670,7 @@ async def build_ui():
 
     with ui.column().classes('w-full max-w-4xl mx-auto p-4 gap-4').style('background-color: #000000;'):
         
-        clock_label = ui.label('').classes('tracking-wider text-xs pl-1 clock-text')
+        clock_label = ui.html('').classes('pl-1')
         
         with ui.column().classes('w-full gap-4 p-4 mono-card'):
             
@@ -697,15 +704,15 @@ async def build_ui():
                 with ui.column().classes('w-full gap-3 text-sm text-neutral-400'):
                     with ui.column().classes('gap-0'):
                         ui.label('Pace').classes('text-sm uppercase tracking-wider frappe-dark')
-                        avg_label = ui.label('0.0 hours/week').classes('text-white text-base')
+                        avg_label = ui.label('0.0 hours/week').classes('frappe-light text-base')
                         
                     with ui.column().classes('gap-0'):
                         ui.label('Total Hours').classes('text-sm uppercase tracking-wider frappe-dark')
-                        total_label = ui.label('0h 0m').classes('text-white text-base')
+                        total_label = ui.label('0h 0m').classes('frappe-light text-base')
 
                     with ui.column().classes('gap-0'):
                         ui.label('Total Focus Days').classes('text-sm uppercase tracking-wider frappe-dark')
-                        focus_days_label = ui.label('0 days').classes('text-white text-base')
+                        focus_days_label = ui.label('0 days').classes('frappe-light text-base')
                 
                 ui.label('Show More »').on('click', open_history_panel).classes('absolute bottom-4 left-4 cursor-pointer text-xs uppercase tracking-wider transition-colors blue-link')
 
