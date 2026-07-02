@@ -157,7 +157,7 @@ async def build_ui():
             border-color: #382d26 !important;
         }
         
-        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - ABSOLUTELY BORDERLESS ICON HOVER */
+        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - UNIFIED COLORS WITH PANEL BUTTONS */
         html body .q-btn.timer-btn,
         html body .q-btn.timer-btn:hover,
         html body .q-btn.timer-btn:focus,
@@ -169,13 +169,20 @@ async def build_ui():
         }
         html body .q-btn.timer-btn .q-icon,
         html body .q-btn.timer-btn .q-btn__content {
-            color: #4e3629 !important;
+            color: #59514a !important; /* Identical to icon-panel-btn */
             font-size: 30px !important;
             transition: color 0.1s ease-in-out;
         }
         html body .q-btn.timer-btn:hover .q-icon,
         html body .q-btn.timer-btn:hover .q-btn__content {
-            color: #875d46 !important; /* Unified brown hover */
+            color: #ebdcd0 !important; /* Identical to icon-panel-btn hover */
+        }
+        html body .q-btn.timer-btn:focus .q-icon,
+        html body .q-btn.timer-btn:active .q-icon {
+            color: #59514a !important;
+        }
+        html body .q-btn.timer-btn:hover:focus .q-icon {
+            color: #ebdcd0 !important;
         }
         
         /* HELP AND SETTINGS BUTTONS - RADICAL HOVER OVERRIDE */
@@ -201,6 +208,25 @@ async def build_ui():
         }
         html body .icon-panel-btn:hover:focus .q-icon {
             color: #ebdcd0 !important;
+        }
+
+        /* INLINE SUGGESTION EDIT PENCIL BUTTON */
+        html body .edit-pencil-btn,
+        html body .edit-pencil-btn:hover,
+        html body .edit-pencil-btn:focus,
+        html body .edit-pencil-btn:active {
+            background: transparent !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        html body .edit-pencil-btn .q-icon {
+            color: #4e3629 !important; /* Elegant App Brown Core */
+            font-size: 14px !important;
+            transition: color 0.1s ease-in-out;
+        }
+        html body .edit-pencil-btn:hover .q-icon {
+            color: #875d46 !important; /* Balanced Brown Hover */
         }
         
         .inline-mono-btn {
@@ -313,7 +339,7 @@ async def build_ui():
         .bg-neutral-950 { background-color: #000000 !important; }
         .border-neutral-950 { border-color: #16100d !important; }
 
-        /* LATENCY-PROOFED DUAL ALTERNATING TOGGLE RULES WITH HARD ENFORCEMENT */
+        /* LATENCY-PROOFED DUAL ALTERNATING TOGGLE RULES WITH SUPREME SPECIFICITY OVERRIDES */
         html body .large-toggle .q-btn {
             font-size: 13px !important;
             padding: 3px 10px !important;
@@ -321,7 +347,7 @@ async def build_ui():
             box-shadow: none !important;
             transition: none !important;
         }
-        /* Inactive State Core & Contents (Including Disabled) */
+        /* Inactive Buttons State (Including Forced Disabled via Latency Locks) */
         html body .large-toggle .q-btn:not(.q-btn--active),
         html body .large-toggle .q-btn.disabled:not(.q-btn--active) {
             background-color: #000000 !important;
@@ -331,10 +357,10 @@ async def build_ui():
         }
         html body .large-toggle .q-btn:not(.q-btn--active) *,
         html body .large-toggle .q-btn.disabled:not(.q-btn--active) * {
-            color: #4a413a !important;
+            color: #59514a !important; /* Perfect passive readable matching color */
             opacity: 1 !important;
         }
-        /* Active State Core & Contents (Including Disabled) */
+        /* Active Buttons State (Including Forced Disabled via Latency Locks) */
         html body .large-toggle .q-btn.q-btn--active,
         html body .large-toggle .q-btn.disabled.q-btn--active {
             background-color: #4e3629 !important;
@@ -344,7 +370,7 @@ async def build_ui():
         }
         html body .large-toggle .q-btn.q-btn--active *,
         html body .large-toggle .q-btn.disabled.q-btn--active * {
-            color: #ebdcd0 !important;
+            color: #ebdcd0 !important; /* Pure uniform text selection color */
             opacity: 1 !important;
         }
     </style>
@@ -478,7 +504,7 @@ async def build_ui():
                         
             with ui.column().classes('w-full pt-2.5 mt-1 gap-1 text-[11px] frappe-dark').style('border-top: 1px solid #141414;'):
                 with ui.row().classes('items-center gap-2 hover:text-white transition-colors cursor-pointer').on('click', lambda: ui.navigate.to('https://github.com/j46-txt/CaFE', new_tab=True)):
-                    ui.html('''<svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2;3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>''')
+                    ui.html('''<svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display: block; vertical-align: middle; width: 14px; height: 14px; fill: currentColor; overflow: visible;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>''')
                     ui.label('github.com/j46-txt/CaFE')
             
             ui.button('Close Info', on_click=dialog.close).classes('w-full mono-btn mt-4 text-xs')
@@ -661,8 +687,8 @@ async def build_ui():
         date_str = now.strftime('%d/%m/%Y')
         day_str = now.strftime('%A')
         time_str = now.strftime('%H:%M')
-        # Blinda o texto completo em HTML puro garantindo cor igual e imutável para todos os caracteres
-        clock_label.content = f'<span style="color: #59514a; font-size: 12px; tracking-content: wider;">{date_str} | {day_str} | {time_str}</span>'
+        # Encapsula cada segmento e pipe em estilos inline explícitos para congelar qualquer leak cromático do Quasar
+        clock_label.content = f'<div style="color: #59514a; font-size: 12px; font-family: \'Courier Prime\', monospace !important;"><span style="color: #59514a;">{date_str}</span> <span style="color: #59514a;">|</span> <span style="color: #59514a;">{day_str}</span> <span style="color: #59514a;">|</span> <span style="color: #59514a;">{time_str}</span></div>'
         greeting_label.text = get_greeting()
         update_display()
 
@@ -681,7 +707,7 @@ async def build_ui():
                     with ui.row().classes('items-center gap-1.5').style('height: 28px; max-height: 28px;'):
                         ui.label("Today's suggestion:").classes('frappe-dark text-sm')
                         suggestion_val_label = ui.label('').classes('frappe-light uppercase text-sm')
-                        edit_suggestion_inline_btn = ui.button(icon='edit', on_click=open_suggestions_panel).props('flat dense size=xs color=grey no-ripple').style('margin-top: -2px; padding: 0; width: 12px; min-width: 12px;')
+                        edit_suggestion_inline_btn = ui.button(icon='edit', on_click=open_suggestions_panel).props('flat dense size=xs no-ripple').classes('edit-pencil-btn').style('margin-top: -2px; padding: 0; width: 14px; min-width: 14px;')
                         add_suggestion_inline_btn = ui.button('+ Define Suggestions', on_click=open_suggestions_panel).classes('inline-mono-btn')
                 
                 with ui.row().classes('gap-2 items-center'):
