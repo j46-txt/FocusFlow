@@ -112,8 +112,8 @@ async def build_ui():
             border-bottom: 1px solid #16100d !important;
         }
 
-        /* SUPREME UNIFORM CLOCK TINT MATRIX */
-        .clock-fixed-tint, .clock-fixed-tint *, .clock-fixed-tint span {
+        /* CLOCK ISOLATED CONTAINER TINT LOCK */
+        .clock-fixed-tint, .clock-fixed-tint * {
             color: #59514a !important;
             font-size: 12px !important;
             font-family: 'Courier Prime', monospace !important;
@@ -228,7 +228,7 @@ async def build_ui():
             border: none !important;
             align-self: flex-start !important;
             position: relative !important;
-            top: -1px !important; /* Calibrated down to look exactly like a mathematical exponent */
+            top: -1px !important;
             margin-left: -1px !important;
             padding: 0 !important;
         }
@@ -509,7 +509,6 @@ async def build_ui():
             
             ui.html('<div class="text-xs mb-3" style="color: #59514a !important; text-transform: none !important;"><span style="color: #4e3629 !important; font-weight: bold;">C</span>onsistency <span style="color: #4e3629 !important; font-weight: bold;">a</span>nd <span style="color: #4e3629 !important; font-weight: bold;">F</span>ocus <span style="color: #4e3629 !important; font-weight: bold;">E</span>ngine</div>')
             
-            # DIRECT DIRECTIVE USER MANUAL (OBJECTIVE USER GUIDE TEXT REPLACEMENT)
             ui.html('''
             <div class="text-xs frappe-dark mb-4 leading-relaxed" style="text-transform: none !important;">
                 <strong>• Timer Modes:</strong> Choose <em>Pomodoro</em> to automatically alternate between structured Focus and Break countdowns, or <em>Stopwatch</em> to log count-up sessions freely.<br>
@@ -520,10 +519,9 @@ async def build_ui():
             ''')
                         
             with ui.column().classes('w-full pt-2.5 mt-1 gap-1').style('border-top: 1px solid #141414;'):
-                # BULLETPROOF RE-ENGINEERED STANDALONE HTML SVG GITHUB ELEMENT
                 ui.html('''
                 <a href="https://github.com/j46-txt/CaFE" target="_blank" class="gh-link-custom">
-                    <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle; overflow: visible;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block; vertical-align: middle; overflow: visible;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2;3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.85.54 1.71 0 1.24-.01 2.23-.01 2.53 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
                     <span style="font-family: 'Courier Prime', monospace !important;">github.com/j46-txt/CaFE</span>
                 </a>
                 ''')
@@ -717,8 +715,8 @@ async def build_ui():
         date_str = now.strftime('%d/%m/%Y')
         day_str = now.strftime('%A')
         time_str = now.strftime('%H:%M')
-        # Consolidated granular atomic structure rendering explicit character blocks inside the locked layout
-        clock_label.content = f'<span>{date_str}</span> <span>|</span> <span>{day_str}</span> <span>|</span> <span>{time_str}</span>'
+        # Rendered as a single atomic text string using mid-dots '·' to completely preserve color consistency
+        clock_label.content = f'<div style="color: #59514a !important;">{date_str} · {day_str} · {time_str}</div>'
         greeting_label.text = get_greeting()
         update_display()
 
@@ -773,12 +771,12 @@ async def build_ui():
                 ui.label('Show More »').on('click', open_history_panel).classes('absolute bottom-4 left-4 cursor-pointer text-xs uppercase tracking-wider transition-colors blue-link')
 
             with ui.column().classes('p-4 gap-4 items-center justify-start relative mono-card').style('flex: 1 1 0; min-width: 320px; min-height: 250px;'):
-                with ui.row().classes('w-full items-center pb-2 relative').style('height: 32px; min-height: 32px; max-height: 32px; border-bottom: 1px solid #141414;'):
+                # TIMER DIVIDER LINE CORRECTED TO BALANCED DARK BROWN (#16100d)
+                with ui.row().classes('w-full items-center pb-2 relative').style('height: 32px; min-height: 32px; max-height: 32px; border-bottom: 1px solid #16100d;'):
                     ui.label('Timer').classes('text-sm uppercase tracking-wider frappe-light')
                     with ui.row().classes('absolute right-0 top-0 bottom-2 items-center'):
                         timer_status_label = ui.label('[Focus]').classes('rounded-none font-mono')
                 
-                # NATIVE TOGGLE REMOVED FOR RAW ATOMIC ACTION BUTTON ROW HOOKS
                 with ui.row().classes('mt-1 gap-0 justify-center items-center'):
                     pomo_toggle_btn = ui.button('Pomodoro', on_click=lambda: (focus_timer.set_mode('Pomodoro'), update_display())).props('flat dense no-ripple').classes('toggle-btn-pomo')
                     stopwatch_toggle_btn = ui.button('Stopwatch', on_click=lambda: (focus_timer.set_mode('Stopwatch'), update_display())).props('flat dense no-ripple').classes('toggle-btn-sw')
@@ -791,7 +789,8 @@ async def build_ui():
                         reset_btn = ui.button(on_click=lambda: (focus_timer.reset(), update_display())).classes('timer-btn').props('flat round icon=refresh size=md no-ripple')
                         stop_btn = ui.button(on_click=lambda: (focus_timer.stop(), update_display())).classes('timer-btn').props('flat round icon=stop size=md no-ripple')
 
-                with ui.row().classes('w-full items-center gap-1.5 mt-auto pt-2').style('border-top: 1px solid #141414;'):
+                # TODAY FOOTER DIVIDER LINE CORRECTED TO BALANCED DARK BROWN (#16100d)
+                with ui.row().classes('w-full items-center gap-1.5 mt-auto pt-2').style('border-top: 1px solid #16100d;'):
                     ui.label("Today:").classes('text-xs uppercase tracking-wider frappe-dark')
                     today_label = ui.label('0h 0m').classes('text-xs frappe-light')
 
