@@ -111,6 +111,13 @@ async def build_ui():
         .mono-divider {
             border-bottom: 1px solid #16100d !important;
         }
+
+        /* CLOCK ISOLATED TEXT NODE LOCK */
+        html body .clock-text-locked {
+            color: #59514a !important;
+            font-size: 12px !important;
+            letter-spacing: 0.02em !important;
+        }
         
         /* PROPRIETARY SEMANTIC CLASSES IN ENGLISH */
         .frappe-light { color: #ebdcd0 !important; }
@@ -221,7 +228,7 @@ async def build_ui():
             border: none !important;
             align-self: flex-start !important;
             position: relative !important;
-            top: -4px !important; /* Perfect mathematical exponent alignment */
+            top: -2px !important; /* Adjusted exactly 2px down from previous build */
             margin-left: -2px !important;
             padding: 0 !important;
         }
@@ -346,7 +353,7 @@ async def build_ui():
         .bg-neutral-950 { background-color: #000000 !important; }
         .border-neutral-950 { border-color: #16100d !important; }
 
-        /* LAG-PROOFED DISCRETE BUTTON TOGGLE ARCHITECTURE (HEIGHTS UNBOUNDED TO PREVENT CLIPPING) */
+        /* ANTI-LAG ATOMIC DISCRETE BUTTON TOGGLE SPECIFICATIONS */
         html body .toggle-btn-pomo, html body .toggle-btn-sw {
             font-size: 13px !important;
             padding: 4px 14px !important;
@@ -364,7 +371,7 @@ async def build_ui():
             border-bottom-right-radius: 2px !important;
             margin-left: -1px !important;
         }
-        /* Active Style Matrix */
+        /* Rigid Active State (With Color Fill) */
         html body .toggle-btn-active,
         html body .toggle-btn-active.disabled {
             background-color: #4e3629 !important;
@@ -377,11 +384,11 @@ async def build_ui():
             color: #ebdcd0 !important;
             opacity: 1 !important;
         }
-        /* Inactive Style Matrix */
+        /* Rigid Extinguished Inactive State (Transparent background, Contoured) */
         html body .toggle-btn-inactive,
         html body .toggle-btn-inactive.disabled {
-            background-color: #000000 !important;
-            background: #000000 !important;
+            background-color: transparent !important;
+            background: transparent !important;
             border: 1px solid #16100d !important;
             opacity: 1 !important;
         }
@@ -639,14 +646,14 @@ async def build_ui():
         reset_btn.set_visibility(is_pomo_mode and status != 'idle')
         stop_btn.set_visibility(is_stopwatch and status != 'idle')
 
-        # ATOMIC CLASS MANAGEMENT FOR THE TOGGLE ROW (LOCKS OUT MIXED CLASHING LAYOUTS)
+        # ANTI-LAG REPLACEMENT STATE MATRIX (Prevents residual background colors from getting stuck)
         is_pomo_active = focus_timer.state.mode in ('pomodoro', 'break')
         if is_pomo_active:
-            pomo_toggle_btn.classes(add='toggle-btn-active', remove='toggle-btn-inactive')
-            stopwatch_toggle_btn.classes(add='toggle-btn-inactive', remove='toggle-btn-active')
+            pomo_toggle_btn.classes(replace='toggle-btn-pomo toggle-btn-active')
+            stopwatch_toggle_btn.classes(replace='toggle-btn-sw toggle-btn-inactive')
         else:
-            pomo_toggle_btn.classes(add='toggle-btn-inactive', remove='toggle-btn-active')
-            stopwatch_toggle_btn.classes(add='toggle-btn-active', remove='toggle-btn-inactive')
+            pomo_toggle_btn.classes(replace='toggle-btn-pomo toggle-btn-inactive')
+            stopwatch_toggle_btn.classes(replace='toggle-btn-sw toggle-btn-active')
 
         if status == 'idle':
             pomo_toggle_btn.enable()
@@ -710,11 +717,8 @@ async def build_ui():
     
     def update_clock():
         now = datetime.datetime.now()
-        date_str = now.strftime('%d/%m/%Y')
-        day_str = now.strftime('%A')
-        time_str = now.strftime('%H:%M')
-        # Supreme inline styling redundancy to permanently prevent any chromatic variance across text segments
-        clock_label.content = f'<div style="color: #59514a !important; font-size: 12px; font-family: \'Courier Prime\', monospace !important;"><span style="color: #59514a !important;">{date_str}</span> <span style="color: #59514a !important;">|</span> <span style="color: #59514a !important;">{day_str}</span> <span style="color: #59514a !important;">|</span> <span style="color: #59514a !important;">{time_str}</span></div>'
+        # Direct pure string generation into a single continuous DOM text block
+        clock_label.text = now.strftime('%d/%m/%Y | %A | %H:%M')
         greeting_label.text = get_greeting()
         update_display()
 
@@ -722,7 +726,7 @@ async def build_ui():
 
     with ui.column().classes('w-full max-w-4xl mx-auto p-4 gap-4').style('background-color: #000000;'):
         
-        clock_label = ui.html('').classes('pl-1')
+        clock_label = ui.label('').classes('clock-text-locked pl-1')
         
         with ui.column().classes('w-full gap-4 p-4 mono-card'):
             
