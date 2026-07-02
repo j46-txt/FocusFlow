@@ -126,14 +126,14 @@ async def build_ui():
         }
         .mono-btn:hover {
             background-color: #120c09 !important;
-            color: #ebdcd0 !important;
+            color: #f2eae1 !important;
             border-color: #382d26 !important;
         }
         
         .inline-mono-btn {
             background-color: #6f4e37 !important;
             border: 1px solid #6f4e37 !important;
-            color: #ebdcd0 !important;
+            color: #f2eae1 !important;
             text-transform: uppercase !important;
             border-radius: 2px !important;
             box-shadow: none !important;
@@ -157,7 +157,7 @@ async def build_ui():
         .inline-mono-btn:hover {
             background-color: #543d2b !important;
             border-color: #543d2b !important;
-            color: #ebdcd0 !important;
+            color: #f2eae1 !important;
         }
         
         .blue-link {
@@ -174,10 +174,10 @@ async def build_ui():
             border-radius: 0px !important;
             border: 1px solid #16100d !important;
             background-color: #000000 !important;
-            color: #5c4a3f !important;
+            color: #4a413a !important;
         }
         .large-toggle .q-btn--active {
-            color: #ebdcd0 !important;
+            color: #f2eae1 !important;
             background-color: #6f4e37 !important;
             border-color: #6f4e37 !important;
         }
@@ -199,10 +199,9 @@ async def build_ui():
             animation: gradient-flow-right 3s linear infinite !important;
         }
 
-        /* Mapeamento estético das classes utilitárias de texto para a nova hierarquia */
-        .text-white, .text-neutral-300, .hover\:text-white:hover { color: #ebdcd0 !important; }
+        .text-white, .text-neutral-300, .hover\:text-white:hover { color: #c4b3a5 !important; }
         .text-neutral-400 { color: #b5a499 !important; }
-        .text-neutral-500 { color: #5c4a3f !important; }
+        .text-neutral-500 { color: #59514a !important; }
         .text-neutral-600 { color: #382d26 !important; }
         .bg-neutral-950 { background-color: #000000 !important; }
         .border-neutral-950 { border-color: #16100d !important; }
@@ -249,7 +248,6 @@ async def build_ui():
             ui.button('Reset statistics', on_click=confirm_reset).props('flat dense').classes('text-red-500/70 hover:text-red-400 text-xs self-start mb-3').style('text-transform: none; padding-left: 0;')
 
             async def save_settings():
-                # Extract NiceGUI tracking values safely while resting on the main loop thread
                 pomo_val = int(pomo_input.value) if pomo_input.value is not None else 25
                 break_val = int(break_input.value) if break_input.value is not None else 5
                 goal_val = int(goal_input.value) if goal_input.value is not None else 10
@@ -418,7 +416,6 @@ async def build_ui():
         update_display()
 
     async def download_csv_log():
-        # Prevent UI freezing by running synchronous data/string manipulations in a separate worker thread
         loop = asyncio.get_running_loop()
         csv_data = await loop.run_in_executor(None, statistics.export_history_csv)
         ui.download(csv_data, 'focus_history.csv')
