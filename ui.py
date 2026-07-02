@@ -131,23 +131,23 @@ async def build_ui():
             border-color: #382d26 !important;
         }
         
-        /* BOTÕES DE CONTROLE DO TIMER (START, PAUSE, RESTART) - VISIBILIDADE DO ÍCONE FIXADA */
+        /* BOTÕES DE CONTROLE DO TIMER (START, PAUSE, RESTART) - FORMATO VAZADO COM ÍCONE MARROM */
         html body .q-btn.mono-btn.q-btn--round {
-            background-color: #4e3629 !important;
-            border: 1px solid #4e3629 !important;
+            background-color: #000000 !important;
+            border: 1px solid #16100d !important;
             box-shadow: none !important;
         }
         html body .q-btn.mono-btn.q-btn--round .q-icon,
         html body .q-btn.mono-btn.q-btn--round .q-btn__content {
-            color: #ebdcd0 !important;
+            color: #4e3629 !important;
         }
         html body .q-btn.mono-btn.q-btn--round:hover {
-            background-color: #6f4e37 !important;
-            border-color: #6f4e37 !important;
+            background-color: #120c09 !important;
+            border-color: #382d26 !important;
         }
         html body .q-btn.mono-btn.q-btn--round:hover .q-icon,
         html body .q-btn.mono-btn.q-btn--round:hover .q-btn__content {
-            color: #ffffff !important;
+            color: #6f4e37 !important;
         }
         
         .inline-mono-btn {
@@ -180,7 +180,7 @@ async def build_ui():
             color: #ffffff !important;
         }
         
-        /* LINKS DIRETOS NO PRETO (SHOW MORE) */
+        /* LINKS (SHOW MORE) */
         .blue-link {
             color: #4e3629 !important;
             transition: color 0.1s ease-in-out;
@@ -189,55 +189,48 @@ async def build_ui():
             color: #ebdcd0 !important;
         }
         
-        /* BLOQUEIO ABSOLUTO DOS BOTÕES POMODORO / STOPWATCH (SEM MUDANÇA DE COR NO CLIQUE) */
+        /* TRAVAMENTO ABSOLUTO E COMPLETO DO SELETOR POMODORO / STOPWATCH */
         html body .large-toggle .q-btn {
             font-size: 13px !important;
             padding: 3px 10px !important;
             border-radius: 0px !important;
             border: 1px solid #16100d !important;
-            background-color: #000000 !important;
             box-shadow: none !important;
             transition: none !important;
         }
-        html body .large-toggle .q-btn .q-btn__content {
-            color: #4a413a !important; /* Texto do inativo */
+        /* Estado Estático Inativo */
+        html body .large-toggle .q-btn:not(.q-btn--active),
+        html body .large-toggle .q-btn:not(.q-btn--active):hover,
+        html body .large-toggle .q-btn:not(.q-btn--active):focus,
+        html body .large-toggle .q-btn:not(.q-btn--active):active {
+            background-color: #000000 !important;
+            border-color: #16100d !important;
         }
-        html body .large-toggle .q-btn.q-btn--active {
+        html body .large-toggle .q-btn:not(.q-btn--active) .q-btn__content,
+        html body .large-toggle .q-btn:not(.q-btn--active):hover .q-btn__content,
+        html body .large-toggle .q-btn:not(.q-btn--active):focus .q-btn__content,
+        html body .large-toggle .q-btn:not(.q-btn--active):active .q-btn__content {
+            color: #4a413a !important;
+        }
+        /* Estado Estático Ativo Selecionado */
+        html body .large-toggle .q-btn.q-btn--active,
+        html body .large-toggle .q-btn.q-btn--active:hover,
+        html body .large-toggle .q-btn.q-btn--active:focus,
+        html body .large-toggle .q-btn.q-btn--active:active {
             background-color: #4e3629 !important;
             border-color: #4e3629 !important;
         }
-        html body .large-toggle .q-btn.q-btn--active .q-btn__content {
-            color: #ebdcd0 !important; /* Texto do ativo */
+        html body .large-toggle .q-btn.q-btn--active .q-btn__content,
+        html body .large-toggle .q-btn.q-btn--active:hover .q-btn__content,
+        html body .large-toggle .q-btn.q-btn--active:focus .q-btn__content,
+        html body .large-toggle .q-btn.q-btn--active:active .q-btn__content {
+            color: #ebdcd0 !important;
         }
-        /* Desativa overlays visuais nativos */
+        /* Desativação completa dos helpers de efeitos nativos */
         html body .large-toggle .q-btn .q-focus-helper, 
         html body .large-toggle .q-btn .q-ripple {
             display: none !important;
             opacity: 0 !important;
-        }
-        /* Trava a cor do botão não selecionado durante hover, active e focus */
-        html body .large-toggle .q-btn:not(.q-btn--active):hover,
-        html body .large-toggle .q-btn:not(.q-btn--active):active, 
-        html body .large-toggle .q-btn:not(.q-btn--active):focus {
-            background-color: #000000 !important;
-            border-color: #16100d !important;
-        }
-        html body .large-toggle .q-btn:not(.q-btn--active):hover .q-btn__content,
-        html body .large-toggle .q-btn:not(.q-btn--active):active .q-btn__content,
-        html body .large-toggle .q-btn:not(.q-btn--active):focus .q-btn__content {
-            color: #4a413a !important;
-        }
-        /* Trava a cor do botão selecionado ativo durante hover, active e focus */
-        html body .large-toggle .q-btn.q-btn--active:hover,
-        html body .large-toggle .q-btn.q-btn--active:active, 
-        html body .large-toggle .q-btn.q-btn--active:focus {
-            background-color: #4e3629 !important;
-            border-color: #4e3629 !important;
-        }
-        html body .large-toggle .q-btn.q-btn--active:hover .q-btn__content,
-        html body .large-toggle .q-btn.q-btn--active:active .q-btn__content,
-        html body .large-toggle .q-btn.q-btn--active:focus .q-btn__content {
-            color: #ebdcd0 !important;
         }
         
         /* BOTÕES DE ÍCONE PLANOS (Help e Settings) */
@@ -278,20 +271,28 @@ async def build_ui():
             animation: gradient-flow-right 3s linear infinite !important;
         }
 
-        /* ANULAÇÃO IRREVOGÁVEL DOS BRANCOS E CINZAS DO FRAMEWORK */
-        /* Alvo Principal: Números, Valores, Timer, Sugestão, Títulos de Modais e Saudação */
+        /* ANULAÇÃO INCONDICIONAL DE COMPONENTES BRANCOS E CINZAS */
+        /* Grupo de Alta Visibilidade: Números, Valores, Timer, Sugestão Ativa, Saudação e Títulos do Painel */
         html body .text-white, 
-        html body [class*="text-white"], 
+        html body [class*="text-white"],
+        html body .text-white *,
+        html body [class*="text-white"] *,
         html body .text-neutral-300, 
         html body [class*="text-neutral-300"],
-        html body .text-5xl { 
+        html body .text-neutral-300 *,
+        html body .text-neutral-400.uppercase,
+        html body [class*="text-neutral-400"].uppercase,
+        html body .text-5xl,
+        html body .text-5xl * { 
             color: #ebdcd0 !important; 
         }
-        /* Alvo Secundário: Labels Estáticas Apagadas (Pace, Weekly Goal, Statistics, Timer, etc.) */
+        /* Grupo de Labels Secundárias Desaturadas: Pace, Weekly Goal, etc. (Sem afetar os títulos uppercase) */
         html body .text-neutral-500, 
         html body [class*="text-neutral-500"],
-        html body .text-neutral-400,
-        html body [class*="text-neutral-400"] { 
+        html body .text-neutral-500 *,
+        html body .text-neutral-400:not(.uppercase),
+        html body [class*="text-neutral-400"]:not(.uppercase),
+        html body .text-neutral-400:not(.uppercase) * { 
             color: #59514a !important; 
         }
         .text-neutral-600 { color: #382d26 !important; }
