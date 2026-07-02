@@ -130,8 +130,8 @@ async def build_ui():
         
         .inline-mono-btn {
             background-color: #000000 !important;
-            border: 1px solid #38bdf8 !important;
-            color: #38bdf8 !important;
+            border: 1px solid #b08968 !important;
+            color: #b08968 !important;
             text-transform: uppercase !important;
             border-radius: 2px !important;
             box-shadow: none !important;
@@ -148,11 +148,11 @@ async def build_ui():
         }
         
         .blue-link {
-            color: #38bdf8 !important;
+            color: #b08968 !important;
             transition: color 0.1s ease-in-out;
         }
         .blue-link:hover {
-            color: #7dd3fc !important;
+            color: #6f4e37 !important;
         }
         
         .large-toggle .q-btn {
@@ -180,7 +180,7 @@ async def build_ui():
             100% { background-position: 0% 50%; }
             }
         .q-linear-progress__model {
-            background: linear-gradient(90deg, #111111, #38bdf8, #111111) !important;
+            background: linear-gradient(90deg, #111111, #b08968, #111111) !important;
             background-size: 200% 200% !important;
             animation: gradient-flow-right 3s linear infinite !important;
         }
@@ -417,12 +417,12 @@ async def build_ui():
 
         if focus_timer.state.mode == 'pomodoro':
             timer_status_label.text = 'Focus'
-            timer_status_label.style('color: #38bdf8; background-color: rgba(56, 189, 248, 0.06); border: 0.5px solid #38bdf8; padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1;')
+            timer_status_label.style('color: #b08968; background-color: rgba(176, 137, 104, 0.06); border: 0.5px solid #b08968; padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1;')
             timer_status_label.set_visibility(True)
             mode_label = 'Focus'
         elif focus_timer.state.mode == 'break':
             timer_status_label.text = 'Break'
-            timer_status_label.style('color: #4ade80; background-color: rgba(74, 222, 128, 0.06); border: 0.5px solid rgba(74, 222, 128, 0.2); padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1;')
+            timer_status_label.style('color: #a3b18a; background-color: rgba(163, 177, 138, 0.06); border: 0.5px solid rgba(163, 177, 138, 0.2); padding: 3px 6px 2px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; border-radius: 2px; line-height: 1.1;')
             timer_status_label.set_visibility(True)
             mode_label = 'Break'
         else:
