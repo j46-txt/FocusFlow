@@ -100,23 +100,23 @@ async def build_ui():
         
         body {
             background-color: #000000 !important;
-            color: #b0b0b0 !important;
+            color: #b5a499 !important;
             font-size: 15px !important;
         }
         
         .mono-card {
             background-color: #000000 !important;
-            border: 1px solid #141414 !important;
+            border: 1px solid #16100d !important;
         }
         
         .mono-divider {
-            border-bottom: 1px solid #141414 !important;
+            border-bottom: 1px solid #16100d !important;
         }
         
         .mono-btn {
             background-color: #000000 !important;
-            border: 1px solid #141414 !important;
-            color: #d1d1d1 !important;
+            border: 1px solid #16100d !important;
+            color: #b5a499 !important;
             text-transform: uppercase !important;
             border-radius: 2px !important;
             box-shadow: none !important;
@@ -125,15 +125,15 @@ async def build_ui():
             transition: all 0.1s ease-in-out;
         }
         .mono-btn:hover {
-            background-color: #111111 !important;
-            color: #ffffff !important;
-            border-color: #333333 !important;
+            background-color: #120c09 !important;
+            color: #ebdcd0 !important;
+            border-color: #382d26 !important;
         }
         
         .inline-mono-btn {
-            background-color: #000000 !important;
+            background-color: #6f4e37 !important;
             border: 1px solid #6f4e37 !important;
-            color: #6f4e37 !important;
+            color: #ebdcd0 !important;
             text-transform: uppercase !important;
             border-radius: 2px !important;
             box-shadow: none !important;
@@ -155,9 +155,9 @@ async def build_ui():
         }
         
         .inline-mono-btn:hover {
-            background-color: #111111 !important;
-            color: #b08968 !important;
-            border-color: #b08968 !important;
+            background-color: #543d2b !important;
+            border-color: #543d2b !important;
+            color: #ebdcd0 !important;
         }
         
         .blue-link {
@@ -172,32 +172,40 @@ async def build_ui():
             font-size: 13px !important;
             padding: 3px 10px !important;
             border-radius: 0px !important;
-            border: 1px solid #141414 !important;
+            border: 1px solid #16100d !important;
             background-color: #000000 !important;
-            color: #555555 !important;
+            color: #5c4a3f !important;
         }
         .large-toggle .q-btn--active {
-            color: #ffffff !important;
+            color: #ebdcd0 !important;
             background-color: #6f4e37 !important;
             border-color: #6f4e37 !important;
         }
         
         .q-field__native, .q-field__input {
-            color: #b0b0b0 !important;
+            color: #b5a499 !important;
             font-size: 15px !important;
         }
-        .q-field--outlined .q-field__control { border: 1px solid #141414 !important; border-radius: 0px !important; }
-        .q-linear-progress { background: #111111 !important; color: #b0b0b0 !important; }
+        .q-field--outlined .q-field__control { border: 1px solid #16100d !important; border-radius: 0px !important; }
+        .q-linear-progress { background: #120c09 !important; color: #b5a499 !important; }
         
         @keyframes gradient-flow-right {
             0% { background-position: 200% 50%; }
             100% { background-position: 0% 50%; }
             }
         .q-linear-progress__model {
-            background: linear-gradient(90deg, #111111, #6f4e37, #111111) !important;
+            background: linear-gradient(90deg, #120c09, #6f4e37, #120c09) !important;
             background-size: 200% 200% !important;
             animation: gradient-flow-right 3s linear infinite !important;
         }
+
+        /* Mapeamento estético das classes utilitárias de texto para a nova hierarquia */
+        .text-white, .text-neutral-300, .hover\:text-white:hover { color: #ebdcd0 !important; }
+        .text-neutral-400 { color: #b5a499 !important; }
+        .text-neutral-500 { color: #5c4a3f !important; }
+        .text-neutral-600 { color: #382d26 !important; }
+        .bg-neutral-950 { background-color: #000000 !important; }
+        .border-neutral-950 { border-color: #16100d !important; }
     </style>
     ''')
 
