@@ -118,6 +118,13 @@ async def build_ui():
         .frappe-muted { color: #382d26 !important; }
         .clock-text { color: #59514a !important; }
         
+        /* ABSOLUTE DISABLE OF ALL RECTANGULAR HOVER/FOCUS BOXES GLOBALLY */
+        html body .q-focus-helper,
+        html body .q-btn .q-focus-helper {
+            display: none !important;
+            opacity: 0 !important;
+        }
+        
         /* STANDARD RECTANGULAR BUTTONS */
         .mono-btn {
             background-color: #000000 !important;
@@ -136,7 +143,7 @@ async def build_ui():
             border-color: #382d26 !important;
         }
         
-        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - PURE ICON HOVER, NO RECTANGLE BACKGROUND */
+        /* TIMER CONTROL ROUND BUTTONS (START, PAUSE, RESTART) - BORDERLESS WITH UNIFIED CLEAN HOVER */
         html body .q-btn.mono-btn.q-btn--round {
             background-color: transparent !important;
             background: transparent !important;
@@ -148,16 +155,14 @@ async def build_ui():
             color: #4e3629 !important;
             font-size: 38px !important;
         }
-        html body .q-btn.mono-btn.q-btn--round .q-focus-helper {
-            display: none !important; /* Eliminates the rectangular background highlight completely */
-        }
         html body .q-btn.mono-btn.q-btn--round:hover {
             background-color: transparent !important;
             background: transparent !important;
+            border: none !important;
         }
         html body .q-btn.mono-btn.q-btn--round:hover .q-icon,
         html body .q-btn.mono-btn.q-btn--round:hover .q-btn__content {
-            color: #875d46 !important; /* Matches unified lighter brown hover */
+            color: #875d46 !important; /* Unified lighter brown hover */
         }
         
         .inline-mono-btn {
@@ -194,62 +199,43 @@ async def build_ui():
             transition: color 0.1s ease-in-out;
         }
         .blue-link:hover {
-            color: #875d46 !important; /* Synchronized with control buttons hover */
+            color: #875d46 !important; /* Synchronized lighter brown hover */
         }
         
-        /* TIMER MODE TOGGLE (POMODORO / STOPWATCH) - LOCKED WITH ACCESSIBILITY ATTRIBUTES */
-        html body .large-toggle .q-btn {
-            font-size: 13px !important;
-            padding: 3px 10px !important;
-            border-radius: 0px !important;
-            box-shadow: none !important;
-            transition: none !important;
-        }
-        /* Static Stable Inactive State */
+        /* LATENCY BOUNCE GLITCH FIX FOR POMODORO / STOPWATCH TOGGLE */
         html body .large-toggle .q-btn,
-        html body .large-toggle .q-btn[aria-pressed="false"],
-        html body .large-toggle .q-btn[aria-pressed="false"]:hover,
-        html body .large-toggle .q-btn[aria-pressed="false"]:focus,
-        html body .large-toggle .q-btn[aria-pressed="false"]:active,
-        html body .large-toggle .q-btn:not(.q-btn--active):hover,
-        html body .large-toggle .q-btn:not(.q-btn--active):focus,
-        html body .large-toggle .q-btn:not(.q-btn--active):active {
+        html body .large-toggle .q-btn.q-btn--active,
+        html body .large-toggle .q-btn:hover,
+        html body .large-toggle .q-btn:focus,
+        html body .large-toggle .q-btn:active {
             background-color: #000000 !important;
             background: #000000 !important;
             border: 1px solid #16100d !important;
         }
         html body .large-toggle .q-btn .q-btn__content,
-        html body .large-toggle .q-btn:not(.q-btn--active) .q-btn__content,
-        html body .large-toggle .q-btn:not(.q-btn--active):hover .q-btn__content,
-        html body .large-toggle .q-btn:not(.q-btn--active):focus .q-btn__content,
-        html body .large-toggle .q-btn:not(.q-btn--active):active .q-btn__content {
+        html body .large-toggle .q-btn.q-btn--active .q-btn__content,
+        html body .large-toggle .q-btn:hover .q-btn__content,
+        html body .large-toggle .q-btn:focus .q-btn__content,
+        html body .large-toggle .q-btn:active .q-btn__content {
             color: #4a413a !important;
         }
-        /* Static Stable Active State */
+        
+        /* Apply active styles ONLY when server confirms state via aria-pressed="true" */
         html body .large-toggle .q-btn[aria-pressed="true"],
+        html body .large-toggle .q-btn[aria-pressed="true"].q-btn--active,
         html body .large-toggle .q-btn[aria-pressed="true"]:hover,
         html body .large-toggle .q-btn[aria-pressed="true"]:focus,
-        html body .large-toggle .q-btn[aria-pressed="true"]:active,
-        html body .large-toggle .q-btn.q-btn--active:hover,
-        html body .large-toggle .q-btn.q-btn--active:focus,
-        html body .large-toggle .q-btn.q-btn--active:active {
+        html body .large-toggle .q-btn[aria-pressed="true"]:active {
             background-color: #4e3629 !important;
             background: #4e3629 !important;
             border: 1px solid #4e3629 !important;
         }
         html body .large-toggle .q-btn[aria-pressed="true"] .q-btn__content,
+        html body .large-toggle .q-btn[aria-pressed="true"].q-btn--active .q-btn__content,
         html body .large-toggle .q-btn[aria-pressed="true"]:hover .q-btn__content,
         html body .large-toggle .q-btn[aria-pressed="true"]:focus .q-btn__content,
-        html body .large-toggle .q-btn[aria-pressed="true"]:active .q-btn__content,
-        html body .large-toggle .q-btn.q-btn--active:hover .q-btn__content,
-        html body .large-toggle .q-btn.q-btn--active:focus .q-btn__content,
-        html body .large-toggle .q-btn.q-btn--active:active .q-btn__content {
+        html body .large-toggle .q-btn[aria-pressed="true"]:active .q-btn__content {
             color: #ebdcd0 !important;
-        }
-        html body .large-toggle .q-btn .q-focus-helper, 
-        html body .large-toggle .q-btn .q-ripple {
-            display: none !important;
-            opacity: 0 !important;
         }
         
         /* FLAT ICON INTERACTIVE BUTTONS (Help and Settings) */
@@ -454,7 +440,7 @@ async def build_ui():
         with ui.dialog() as dialog, ui.card().classes('w-[420px] rounded-none p-4 mono-card'):
             ui.label('Information').classes('text-xs frappe-light uppercase tracking-wider mb-3 w-full pb-1 mono-divider')
             
-            ui.html('<div class="text-xs frappe-light uppercase tracking-wider mb-3"><b>C</b>onsistency <b>a</b>nd <b>F</b>ocus <b>E</b>ngine</div>')
+            ui.html('<div class="text-xs frappe-dark tracking-wider mb-3" style="color: #59514a !important; text-transform: none !important;"><b>C</b>onsistency <b>a</b>nd <b>F</b>ocus <b>E</b>ngine</div>')
             
             ui.label('CaFE features two main operating modes: a Pomodoro loop that automatically alternates between Focus and Break intervals, and a Stopwatch.').classes('text-xs frappe-dark mb-3 leading-relaxed')
             ui.label('During Pomodoro rest states, a contextual "Skip Break »" shortcut becomes available at the bottom right.').classes('text-xs frappe-dark mb-3 leading-relaxed')
@@ -561,12 +547,12 @@ async def build_ui():
 
         if focus_timer.state.mode == 'pomodoro':
             timer_status_label.text = 'Focus'
-            timer_status_label.style('color: #de9c52; background-color: rgba(222, 156, 82, 0.06); border: 0.5px solid #de9c52; padding: 5px 4px 0px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; justify-content: center; border-radius: 2px; line-height: 1; height: 18px;')
+            timer_status_label.style('color: #de9c52; background-color: rgba(222, 156, 82, 0.06); border: 0.5px solid #de9c52; padding: 4px 5px 1px 7px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; justify-content: center; border-radius: 2px; line-height: 1; height: 18px;')
             timer_status_label.set_visibility(True)
             mode_label = 'Focus ☕'
         elif focus_timer.state.mode == 'break':
             timer_status_label.text = 'Break'
-            timer_status_label.style('color: #a3b18a; background-color: rgba(163, 177, 138, 0.06); border: 0.5px solid rgba(163, 177, 138, 0.2); padding: 5px 4px 0px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; justify-content: center; border-radius: 2px; line-height: 1; height: 18px;')
+            timer_status_label.style('color: #a3b18a; background-color: rgba(163, 177, 138, 0.06); border: 0.5px solid rgba(163, 177, 138, 0.2); padding: 4px 5px 1px 7px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; justify-content: center; border-radius: 2px; line-height: 1; height: 18px;')
             timer_status_label.set_visibility(True)
             mode_label = 'Break ☕'
         else:
@@ -710,7 +696,7 @@ async def build_ui():
                 ).classes('large-toggle mt-1').props('dense unevaluated flat')
                 
                 with ui.column().classes('w-full items-center mt-1'):
-                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl frappe-light tracking-normal').style('transform: translateY(6px);')
+                    timer_label = ui.label(focus_timer.display_time).classes('text-5xl frappe-light tracking-normal').style('transform: translateY(12px);')
                     
                     with ui.row().classes('gap-4 h-10 items-center justify-center w-full'):
                         start_pause_btn = ui.button(on_click=toggle_start_pause).classes('mono-btn').props('flat round size=lg')
